@@ -109,4 +109,6 @@ ApplicationWindow {
             text: qsTr("Page 2")
         }
     }
+
 }
+

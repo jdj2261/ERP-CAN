@@ -100,7 +100,7 @@ void CanManager::processReceivedFrames()
 
 //        m_ui->receivedMessagesEdit->append(time + flags + view);
         m_TextArea = view;
-        std::cout << m_TextArea.toStdString() << std::endl;
+//        std::cout << m_TextArea.toStdString() << std::endl;
         emit TextAreaChanged();
 
 
@@ -148,6 +148,42 @@ void CanManager::sendRawFrame(const QCanBusFrame &frame) const
     m_canDevice->writeFrame(frame);
 }
 
+void CanManager::setFrameID(const QString &frameID)
+{
+    if(m_FrameID == frameID)
+        return;
+    m_FrameID = frameID;
+    emit frameIDChanged(m_FrameID);
+
+}
+void CanManager::setFrameData(const QString &frameData)
+{
+    if(m_FrameData == frameData)
+        return;
+    m_FrameData = frameData;
+    emit frameDataChanged(m_FrameData);
+}
+
+void CanManager::buttontest()
+{
+    qDebug()<<m_FrameID<<m_FrameData;
+    QString id = "181";
+    const uint frameId = id.toUInt(nullptr, 16);
+
+    std::cout << id.toStdString() << std::endl;
+
+    QString data = "200001ff";
+//    const QByteArray payload = data.toUtf8();
+    const QByteArray payload = QByteArray::fromHex(data.remove(QLatin1Char(' ')).toLatin1());
+
+    printf("%02x \n", &payload);
+//    std::cout << payload.toStdString() << std::endl;
+
+    QCanBusFrame frame = QCanBusFrame(frameId, payload);
+    emit sendFrame(frame);
+
+//    std::cout << m_FrameID.toStdString() << std::endl;
+}
 
 void CanManager::setTextArea(const QString &arg)
 {

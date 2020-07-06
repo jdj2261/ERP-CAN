@@ -7,117 +7,119 @@ class PCanManager : public CanManager
 {
     Q_OBJECT
 public:
-    enum MoState {ABNORMAL, INITIAL, NORMAL};
-    Q_ENUM(MoState)
-    enum MoSeq{NONE, AUTO_RDY, AUTO_ALL, AUTO_ACC, AUTO_EPS};
-    Q_ENUM(MoSeq)
-    enum Gear{P = 0x00, R = 0x70, N = 0x60, D = 0x50};
+
+    enum Gear{D = 0x00, N = 0x04, R = 0x08};
     Q_ENUM(Gear)
 
     Q_PROPERTY(bool Active READ Active WRITE setActive NOTIFY ActiveChanged)
+    Q_PROPERTY(bool AutoEnable READ AutoEnable
+               WRITE setAutoEnable NOTIFY AutoEnableChanged)
+    Q_PROPERTY(bool EstopEnable READ EstopEnable
+               WRITE setEstopEnable NOTIFY EstopEnableChanged)
+    Q_PROPERTY(bool SteerEnable READ SteerEnable
+               WRITE setSteerEnable NOTIFY SteerEnableChanged)
+    Q_PROPERTY(bool SpeedEnable READ SpeedEnable
+               WRITE setSpeedEnable NOTIFY SpeedEnableChanged)
+    Q_PROPERTY(bool OverrideIgnore READ OverrideIgnore
+               WRITE setOverrideIgnore NOTIFY OverrideIgnoreChanged)
 
-    Q_PROPERTY(bool EpsEnable READ EpsEnable WRITE setEpsEnable NOTIFY EpsEnableChanged)
-    Q_PROPERTY(bool AccEnable READ AccEnable WRITE setAccEnable NOTIFY AccEnableChanged)
-    Q_PROPERTY(bool AebEnable READ AebEnable WRITE setAebEnable NOTIFY AebEnableChanged)
-    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
-    Q_PROPERTY(bool EpsOverrideIgnore READ EpsOverrideIgnore
-               WRITE setEpsOverrideIgnore NOTIFY EpsOverrideIgnoreChanged)
+    Q_PROPERTY(bool GearDrive READ GearDrive
+               WRITE setGearDrive NOTIFY GearDriveChanged)
+    Q_PROPERTY(bool GearNeutral READ GearNeutral
+               WRITE setGearNeutral NOTIFY GearNeutralChanged)
+    Q_PROPERTY(bool GearReverse READ GearReverse
+               WRITE setGearReverse NOTIFY GearReverseChanged)
 
     Q_PROPERTY(double SteerAngle READ SteerAngle
                WRITE setSteerAngle NOTIFY SteerAngleChanged)
-    Q_PROPERTY(double Speed READ Speed
+    Q_PROPERTY(quint16 Speed READ Speed
                WRITE setSpeed NOTIFY SpeedChanged)
-    Q_PROPERTY(double VehicleAccel READ VehicleAccel
-               WRITE setVehicleAccel NOTIFY VehicleAccelChanged)
-    Q_PROPERTY(double AebDecRate READ AebDecRate
-               WRITE setAebDecRate NOTIFY AebDecRateChanged)
+    Q_PROPERTY(quint8 Brake READ Brake
+               WRITE setBrake NOTIFY BrakeChanged)
 
-    Q_PROPERTY(MoSeq MoMode READ MoMode NOTIFY MoModeChanged)
-    Q_PROPERTY(MoState MoCtrlState READ MoCtrlState
-               NOTIFY MoCtrlStateChanged)
-    Q_PROPERTY(double VehicleSpeed READ VehicleSpeed
-               NOTIFY VehicleSpeedChanged)
-    Q_PROPERTY(double TargetSpeed READ TargetSpeed
-               WRITE setTargetSpeed NOTIFY TargetSpeedChanged)
-    Q_PROPERTY(Gear GearSelDisp READ GearSelDisp
-               NOTIFY GearSelDispChanged)
+
+    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
 
     explicit PCanManager(QObject *parent = nullptr);
     virtual ~PCanManager() {}
 
 private:
-    bool m_EpsEnable;
-    bool m_AccEnable;
-    bool m_AebEnable;
-    quint8 m_AlvCnt;
-    bool m_EpsOverrideIgnore;
-    double m_SteerAngle;
-    double m_Speed;
-    double m_VehicleAccel;
-    double m_AebDecRate;
-    MoSeq m_MoMode;
-    MoState m_MoCtrlState;
-    double m_FdVehicleSpeed;
-    double m_TargetVehicleSpeed;
-    Gear m_GearSelDisp;
+    bool m_ActiveEnable;
+    bool m_AutoEnable;
+    bool m_EstopEnable;
+    bool m_SteerEnable;
+    bool m_SpeedEnable;
+    bool m_OverrideIgnore;
+    bool m_GearDrive;
+    bool m_GearNeutral;
+    bool m_GearReverse;
 
-    bool bActive;
+    double m_SteerAngle;
+    quint16 m_Speed;
+    quint8 m_Brake;
+
+    quint8 m_AlvCnt;
+    Gear m_GearSelDisp;
     QTimer *timerSendMsg;
 
 public:
-    bool Active() const { return bActive;}
-    bool EpsEnable() const { return m_EpsEnable;}
-    bool AccEnable() const { return m_AccEnable;}
-    bool AebEnable() const { return m_AebEnable;}
-    quint8 AlvCnt() const { return m_AlvCnt;}
-    bool EpsOverrideIgnore() const { return m_EpsOverrideIgnore;}
-    double SteerAngle() const { return m_SteerAngle;}
-    double Speed() const { return m_Speed;}
-    double VehicleAccel() const { return m_VehicleAccel;}
-    double AebDecRate() const { return m_AebDecRate;}
-    MoSeq MoMode() const { return m_MoMode;}
-    MoState MoCtrlState() const { return m_MoCtrlState;}
-    double VehicleSpeed() const { return m_FdVehicleSpeed;}
-    double TargetSpeed() const { return m_TargetVehicleSpeed;}
-    Gear GearSelDisp() const { return m_GearSelDisp;}
+    bool Active() const {return m_ActiveEnable;}
+    bool AutoEnable() const {return m_AutoEnable;}
+    bool EstopEnable() const {return m_EstopEnable;}
+    bool SteerEnable() const {return m_SteerEnable;}
+    bool SpeedEnable() const {return m_SpeedEnable;}
+    bool OverrideIgnore() const {return m_OverrideIgnore;}
+    bool GearDrive() const {return m_GearDrive;}
+    bool GearNeutral() const {return m_GearNeutral;}
+    bool GearReverse() const {return m_GearReverse;}
+
+    double SteerAngle() const {return m_SteerAngle;}
+    quint16 Speed() const {return m_Speed;}
+    quint8 Brake() const {return m_Brake;}
+
+    Gear GearSelDisp() const {return m_GearSelDisp;}
+    quint8 AlvCnt() const {return m_AlvCnt;}
 
     Q_INVOKABLE void setActive(const bool &);
-    Q_INVOKABLE void setEpsEnable(const bool &);
-    Q_INVOKABLE void setAccEnable(const bool &);
-    Q_INVOKABLE void setAebEnable(const bool &);
-    Q_INVOKABLE void setEpsOverrideIgnore(const bool &);
+    Q_INVOKABLE void setAutoEnable(const bool &);
+    Q_INVOKABLE void setEstopEnable(const bool &);
+    Q_INVOKABLE void setSteerEnable(const bool &);
+    Q_INVOKABLE void setSpeedEnable(const bool &);
+    Q_INVOKABLE void setOverrideIgnore(const bool &);
+    Q_INVOKABLE void setGearDrive(const bool &);
+    Q_INVOKABLE void setGearNeutral(const bool &);
+    Q_INVOKABLE void setGearReverse(const bool &);
+
     Q_INVOKABLE void setSteerAngle(const double &);
-    Q_INVOKABLE void setSpeed(const double &);
-    Q_INVOKABLE void setVehicleAccel(const double &);
-    Q_INVOKABLE void setAebDecRate(const double &);
-    Q_INVOKABLE void setTargetSpeed(const double &);
+    Q_INVOKABLE void setSpeed(const quint16 &);
+    Q_INVOKABLE void setBrake(const quint8 &);
 
     Q_INVOKABLE void resetAlvCnt();
     Q_INVOKABLE void incAlvCnt();
 
 signals:
     void ActiveChanged();
-    void EpsEnableChanged();
-    void EpsOverrideIgnoreChanged();
-    void AccEnableChanged();
-    void AebEnableChanged();
-    void AlvCntChanged();
+    void AutoEnableChanged();
+    void EstopEnableChanged();
+    void SteerEnableChanged();
+    void SpeedEnableChanged();
+    void OverrideIgnoreChanged();
+    void GearDriveChanged();
+    void GearNeutralChanged();
+    void GearReverseChanged();
     void SteerAngleChanged();
     void SpeedChanged();
-    void VehicleAccelChanged();
-    void AebDecRateChanged();
-    void MoCtrlStateChanged();
-    void MoModeChanged();
-    void VehicleSpeedChanged();
-    void TargetSpeedChanged();
+    void BrakeChanged();
+
     void GearSelDispChanged();
+    void AlvCntChanged();
 
 
 public slots:
 
 private slots:
     void sendCmdMessage();
-    void onActiveChanged();
+//    void onActiveChanged();
 
 };
 #endif // PCanManager_H

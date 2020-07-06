@@ -6,22 +6,40 @@ PCanConfPageForm {
     onActiveCANChanged: {
         pcanManager.Active = activeCAN
     }
+    onAutoControlChanged: {
+        pcanManager.AutoEnable = autoControl
+    }
+    onEstopControlChanged: {
+        pcanManager.EstopEnable = estopControl
+    }
     onSteerControlChanged: {
-        pcanManager.EpsEnable = steerControl
+        pcanManager.SteerEnable = steerControl
     }
-    onAccelControlChanged: {
-        pcanManager.AccEnable = accelControl
+    onSpeedControlChanged: {
+        pcanManager.SpeedEnable = speedControl
     }
-    onSteerIgnOvrChanged: {
-        pcanManager.EpsOverrideIgnore = steerIgnOvr
+    onIgnOvrChanged: {
+        pcanManager.OverrideIgnore = ignOvr
     }
+
+    onGearDriveChanged: {
+        pcanManager.GearDrive = gearDrive
+    }
+    onGearNeutralChanged: {
+        pcanManager.GearNeutral = gearNeutral
+    }
+    onGearReverseChanged: {
+        pcanManager.GearReverse = gearReverse
+    }
+
     onSteerAngleChanged: {
         pcanManager.SteerAngle = steerAngle
     }
     onSpeedChanged: {
         pcanManager.Speed = speed
     }
-    onAccelChanged: {
-        pcanManager.VehicleAccel = accel
+    onBrakeChanged: {
+        pcanManager.Brake = brake
     }
+
 }

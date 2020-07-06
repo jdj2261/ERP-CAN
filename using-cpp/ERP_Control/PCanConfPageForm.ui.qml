@@ -1,5 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
+import Qt.labs.calendar 1.0
 
 Page {
     id: page
@@ -13,13 +14,23 @@ Page {
     readonly property int brake_MIN: 0
     readonly property int brake_MAX: 100
 
+    //Enable
     property alias activeCAN: switchActive.checked
+    property alias autoControl: switchAuto.checked
+    property alias estopControl: switchEstop.checked
     property alias steerControl: switchSteerControl.checked
-    property alias accelControl: switchAccelControl.checked
-    property alias steerIgnOvr: checkIgnStrOvr.checked
-    property alias steerAngle: dialSteerAngle.value
+    property alias speedControl: switchSpeedControl.checked
+    property alias ignOvr: checkIgnOvr.checked
+
+    // GEAR
+    property alias gearDrive: rbuttonDrive.checked
+    property alias gearNeutral: rbuttonNeutral.checked
+    property alias gearReverse: rbuttonReverse.checked
+
+    // Value
+    property alias steerAngle: spinBoxSteerAngle.value
     property alias speed: sliderSpeed.value
-    property alias accel: sliderBrake.value
+    property alias brake: sliderBrake.value
 
     header: Label {
         text: qsTr("ERP42 Control Panel")
@@ -48,14 +59,14 @@ Page {
             spacing: 20
 
             Switch {
-                id: switchmode
+                id: switchAuto
                 enabled: switchActive.checked
                 text: qsTr("AUTO")
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             Switch {
-                id: switchestop
+                id: switchEstop
                 enabled: switchActive.checked
                 text: qsTr("ESTOP")
                 anchors.verticalCenter: parent.verticalCenter
@@ -64,8 +75,6 @@ Page {
 
         Row {
             id: row3
-            //            x: 20
-            //            y: 46
             width: 550
             height: 30
             spacing: 20
@@ -78,15 +87,15 @@ Page {
             }
 
             Switch {
-                id: switchAccelControl
+                id: switchSpeedControl
                 enabled: switchActive.checked
                 text: qsTr("Speed Control")
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             CheckBox {
-                id: checkIgnStrOvr
-                //            text: qsTr("Ignore Steer Override")
+                id: checkIgnOvr
+                enabled: switchActive.checked
                 text: qsTr("Ignore")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -99,23 +108,26 @@ Page {
             spacing: 20
 
             Text {
-                id: name
+                id: textGear
                 text: qsTr("GEAR")
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             RadioButton {
-                id: radiobutton
+                id: rbuttonDrive
+                enabled: switchActive.checked
                 text: qsTr("DRIVE")
             }
 
             RadioButton {
-                id: radiobutton2
+                id: rbuttonNeutral
+                enabled: switchActive.checked
                 text: qsTr("NEUTRAL")
             }
             RadioButton {
-                id: radiobutton3
-                text: qsTr("RESERVE")
+                id: rbuttonReverse
+                enabled: switchActive.checked
+                text: qsTr("REVERSE")
             }
         }
     }
@@ -153,11 +165,12 @@ Page {
                 id: dialSteerAngle
                 width: 200
                 height: 200
+                inputMode: Dial.Circular
                 stepSize: 1
                 wheelEnabled: true
                 from: steer_MIN_ANGLE
                 to: steer_MAX_ANGLE
-                value: pcanManager.SteerAngle //steerAngle
+                value: dialSteerAngle.value //steerAngle
                 anchors.horizontalCenter: parent.horizontalCenter
                 Text {
                     id: text4
@@ -194,7 +207,7 @@ Page {
                 from: speed_MIN
                 editable: true
                 stepSize: 1
-                value: sliderSpeed.value
+                value: pcanManager.Speed
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -202,10 +215,11 @@ Page {
                 id: sliderSpeed
                 to: speed_MAX
                 from: speed_MIN
+
                 anchors.horizontalCenter: parent.horizontalCenter
-                stepSize: 0.1
+                stepSize: 1
                 orientation: Qt.Vertical
-                value: 0
+                value: pcanManager.Speed
 
                 Text {
                     text: "0"
@@ -252,9 +266,9 @@ Page {
                 to: brake_MAX
                 from: brake_MIN
                 anchors.horizontalCenter: parent.horizontalCenter
-                stepSize: 0.1
+                stepSize: 1
                 orientation: Qt.Vertical
-                value: 0
+                value: pcanManager.Brake
                 Text {
                     text: "0"
                     anchors.bottom: parent.bottom
