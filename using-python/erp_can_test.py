@@ -54,7 +54,7 @@ from threading import Thread
 #         self.__writer = None
 #         pass
 
-class UmdCan():
+class ERPCan():
 
     bus = can.interface.Bus(bustype='pcan',
                             channel='PCAN_USBBUS1',
@@ -64,8 +64,8 @@ class UmdCan():
     Relay LED lights after receiving SAS data
     """
     def __init__(self, degree):
-        self.__reader = CanReader(UmdCan.bus)
-        self.__writer = CanWriter(UmdCan.bus)
+        self.__reader = CanReader(ERPCan.bus)
+        self.__writer = CanWriter(ERPCan.bus)
         self.log = Logger(log_dir, logname='ERP42')
 
 
