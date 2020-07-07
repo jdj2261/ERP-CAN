@@ -310,12 +310,4 @@ Page {
         //            TextEdit: canManager.TextArea
     }
 
-    Button {
-        id: button
-        x: 1110
-        y: 552
-        width: 143
-        height: 63
-        text: qsTr("Button")
-    }
 }

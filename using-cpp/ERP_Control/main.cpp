@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");
     engine.rootContext()->setContextProperty("pcanManager", &pcanManager);
 
+    pcanManager.start();
+
 
     comboboxmodel combo;
 

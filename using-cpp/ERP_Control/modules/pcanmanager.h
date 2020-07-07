@@ -2,8 +2,12 @@
 #define PCanManager_H
 #include "canmanager.h"
 #include <QTimer>
+#include <QThread>
+#include <QDebug>
 
-class PCanManager : public CanManager
+//QString CanManager::m_TextArea;
+
+class PCanManager : public QThread
 {
     Q_OBJECT
 public:
@@ -40,8 +44,22 @@ public:
 
     Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
 
+    Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
+
     explicit PCanManager(QObject *parent = nullptr);
     virtual ~PCanManager() {}
+
+
+//    {
+//        qDebug() << "Inside the worker thread!";
+//        while(1){
+//            for ( int i = 0; i < 50; ++i ) {
+//                setData(i);
+//                msleep( 50 );
+//                0 ? i > 50: i;
+//            }
+//        }
+//    }
 
 private:
     bool m_ActiveEnable;
@@ -62,6 +80,9 @@ private:
     Gear m_GearSelDisp;
     QTimer *timerSendMsg;
 
+    const QString m_getData;
+    QVariant data_{ "" };
+
 public:
     bool Active() const {return m_ActiveEnable;}
     bool AutoEnable() const {return m_AutoEnable;}
@@ -72,6 +93,9 @@ public:
     bool GearDrive() const {return m_GearDrive;}
     bool GearNeutral() const {return m_GearNeutral;}
     bool GearReverse() const {return m_GearReverse;}
+    void run();
+
+    QString getData(QString m_getData) const {return m_getData;}
 
     double SteerAngle() const {return m_SteerAngle;}
     quint16 Speed() const {return m_Speed;}
@@ -97,6 +121,8 @@ public:
     Q_INVOKABLE void resetAlvCnt();
     Q_INVOKABLE void incAlvCnt();
 
+    Q_INVOKABLE QVariant getData() const { return data_; }
+
 signals:
     void ActiveChanged();
     void AutoEnableChanged();
@@ -113,9 +139,16 @@ signals:
 
     void GearSelDispChanged();
     void AlvCntChanged();
+    void dataChanged( const QVariant data );
 
 
 public slots:
+    void setData( const QVariant data ) {
+        if ( data != data_ ) {
+            data_ = data;
+            emit dataChanged( data_ );
+        }
+    }
 
 private slots:
     void sendCmdMessage();

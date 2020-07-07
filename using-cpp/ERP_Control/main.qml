@@ -114,5 +114,50 @@ ApplicationWindow {
         }
     }
 
+//    Button {
+//        id: button
+//        x: 1110
+//        y: 552
+//        width: 143
+//        height: 63
+//        text: qsTr("Button")
+//    }
+
+
+    TextField {
+        x: 800
+        y: 552
+        width: 200
+        height: 100
+        color: "orange"
+        objectName: "test"
+        Text {
+            id: thetext
+            anchors.centerIn: parent
+            text: "placeholder"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: print('parent objectName: ' + parent.objectName)
+        }
+
+    }
+
+    Connections {
+        target: pcanManager
+        onStarted: {
+            print('worker thread started')
+        }
+
+        onDataChanged: {
+            print('data changed to: ' + pcanManager.getData() );
+            thetext.text = pcanManager.getData();
+        }
+    }
+
+    Component.onDestruction: pcanManager.terminate();
+
+
 }
 

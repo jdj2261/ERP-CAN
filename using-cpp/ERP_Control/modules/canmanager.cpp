@@ -144,12 +144,13 @@ void CanManager::processFramesWritten(qint64 count)
     qDebug() << tr("%1 frames written").arg(m_numberFramesWritten);
 }
 
-void CanManager::sendRawFrame(const QCanBusFrame &frame) const
+void CanManager::sendRawFrame(QCanBusFrame &frame)
 {
     printf("send \n");
     if (!send_device)
         return;
     printf("send12 \n");
+
     send_device->writeFrame(frame);
 }
 
@@ -203,9 +204,7 @@ void CanManager::buttontest()
 
     QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
 
-
-    sendRawFrame(frame1);
-
+//    sendRawFrame(frame1);
 
 }
 

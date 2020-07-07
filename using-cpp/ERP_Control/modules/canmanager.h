@@ -28,7 +28,7 @@ public:
     void processReceivedFrames(); //dbc parsing using GENEVI/CANdb
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
-    void sendRawFrame(const QCanBusFrame &frame) const;
+    static void sendRawFrame(QCanBusFrame &frame) ;
 
     QString TextArea() const { return m_TextArea;}
     QString frameID() const { return m_FrameID;}
@@ -50,6 +50,8 @@ public:
 //        emit frameDataChanged(m_FrameData);
 //    }
 
+    static QString m_TextArea;
+
 
 private:
     QCanBusDevice *m_canDevice;
@@ -62,7 +64,7 @@ private:
     QString pluginName;
     QString deviceInterfaceName;
     QString m_test;
-    QString m_TextArea;
+
     QString m_FrameID;
     QString m_FrameData;
 
@@ -73,8 +75,6 @@ signals:
     void TextAreaChanged();
     void frameIDChanged(QString frameID);
     void frameDataChanged(QString frameData);
-    void sendFrame();
-
 
 public slots:
 
