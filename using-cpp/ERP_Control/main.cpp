@@ -24,10 +24,12 @@ int main(int argc, char *argv[])
     CanManager canManager;
     canManager.connectDevice();
 
+
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CanManager>("unmansol.erp42.canmanager", 0, 1, "CanManager");
     engine.rootContext()->setContextProperty("canManager", &canManager);
+
 
     PCanManager pcanManager;
     qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");

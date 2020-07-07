@@ -23,11 +23,12 @@ public:
     bool loadConf(const QString &path);
     void connectDevice();
     void disconnectDevice();
-    void sendRawFrame(const QCanBusFrame &frame) const;
+//    void sendRawFrame(const QCanBusFrame &frame) const;
     void sendMessege(const QVariantMap &msg) const;
     void processReceivedFrames(); //dbc parsing using GENEVI/CANdb
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
+    void sendRawFrame(const QCanBusFrame &frame) const;
 
     QString TextArea() const { return m_TextArea;}
     QString frameID() const { return m_FrameID;}
@@ -52,6 +53,8 @@ public:
 
 private:
     QCanBusDevice *m_canDevice;
+//    QCanBusDevice *send_device;
+    static QCanBusDevice *send_device;
     bool bInitiated;
     QJsonObject jsonConfObj;
     qint64 m_numberFramesWritten;
@@ -70,9 +73,11 @@ signals:
     void TextAreaChanged();
     void frameIDChanged(QString frameID);
     void frameDataChanged(QString frameData);
-    void sendFrame(const QCanBusFrame &frame);
+    void sendFrame();
+
 
 public slots:
+
 };
 
 #endif // CANMANAGER_H

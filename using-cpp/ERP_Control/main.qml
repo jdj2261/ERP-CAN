@@ -54,6 +54,7 @@ ApplicationWindow {
         font.pixelSize: 12
         text: "Frame ID"
 
+
     }
 
     TextField {
@@ -64,6 +65,7 @@ ApplicationWindow {
         height: 40
         font.pixelSize: 12
         placeholderText: "Frame ID"
+        validator: RegExpValidator { regExp: /[0-9a-fA-F]{3}/}
     }
 
     Text {
@@ -85,6 +87,8 @@ ApplicationWindow {
         height: 40
         font.pixelSize: 12
         placeholderText: "Data"
+        validator: RegExpValidator { regExp: /[0-9a-fA-F]{2}(?: [0-9a-fA-F]{2})+$/}
+
     }
 
     Button {
