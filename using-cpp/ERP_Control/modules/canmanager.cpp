@@ -10,7 +10,6 @@
 QCanBusDevice *CanManager::send_device;
 
 CanManager::CanManager(QObject *parent) :
-    QObject(parent),
     m_canDevice(nullptr)
 {
     //init can bus with json or default value
@@ -38,7 +37,6 @@ void CanManager::processErrors(QCanBusDevice::CanBusError error) const
 
 void CanManager::connectDevice()
 {
-
 
     QString errorString;
 
@@ -120,9 +118,11 @@ void CanManager::processReceivedFrames()
         m_TextArea = view;
 //        std::cout << m_TextArea.toStdString() << std::endl;
 
-//        buttontest();
-        emit TextAreaChanged();
+        buttontest();
+//        sendRawFrame(m_busFrame);
 
+        emit TextAreaChanged();
+        usleep(1000);
     }
 }
 
@@ -184,7 +184,7 @@ void CanManager::buttontest()
     --------------------------------------------------------------
     */
 
-    qDebug()<<m_FrameID<<m_FrameData<<m_canDevice;
+    qDebug()<<m_FrameID<<m_FrameData<<send_device;
 
     QString id = m_FrameID;
     const uint frameId = id.toUInt(nullptr, 16);
@@ -202,9 +202,9 @@ void CanManager::buttontest()
     std::cout << std::hex << num << std::endl;
     std::cout << ba_as_hex_string.toStdString() << std::endl;
 
-    QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
+    m_busFrame = QCanBusFrame(frameId, payload);
 
-//    sendRawFrame(frame1);
+    sendRawFrame(m_busFrame);
 
 }
 
@@ -215,3 +215,38 @@ void CanManager::setTextArea(const QString &arg)
 ////    m_TextArea += arg;
 //    emit TextAreaChanged();
 }
+
+void CanManager::run()
+{
+    {
+        qDebug() << "Inside the worker CanManager thread!";
+
+        while(1)
+        {
+
+            std::cout << m_TextArea.toStdString() << std::endl;
+
+            QString id = "181";
+            const uint frameId = id.toUInt(nullptr, 16);
+
+
+            QString data = "20000001f0";
+            const QByteArray payload = QByteArray::fromHex(data.remove(QLatin1Char(' ')).toLatin1());
+
+            QByteArray ba_as_hex_string = payload.toHex();
+
+            uint num = frameId;
+            std::cout << std::hex << num << std::endl;
+            std::cout << ba_as_hex_string.toStdString() << std::endl;
+
+            QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
+
+//            this->sendRawFrame(frame1);
+
+//                std::cout << send_device << std::endl;
+
+            msleep(20);
+        }
+    }
+}
+

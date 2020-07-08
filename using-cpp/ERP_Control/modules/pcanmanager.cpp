@@ -4,6 +4,7 @@
 
 QString CanManager::m_TextArea;
 //extern QCanBusDevice *send_device;
+//QCanBusFrame CanManager::m_busFrame;
 
 PCanManager::PCanManager(QObject *parent) :
     m_ActiveEnable(false),
@@ -199,11 +200,11 @@ void PCanManager::run()
                 QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
 
 
-                CanManager::sendRawFrame(frame1);
+//                CanManager::sendRawFrame(frame1);
 
 //                std::cout << send_device << std::endl;
 
-                msleep(1000);
+                msleep(20);
         }
     }
 }

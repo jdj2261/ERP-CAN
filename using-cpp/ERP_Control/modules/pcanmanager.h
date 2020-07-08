@@ -50,17 +50,6 @@ public:
     virtual ~PCanManager() {}
 
 
-//    {
-//        qDebug() << "Inside the worker thread!";
-//        while(1){
-//            for ( int i = 0; i < 50; ++i ) {
-//                setData(i);
-//                msleep( 50 );
-//                0 ? i > 50: i;
-//            }
-//        }
-//    }
-
 private:
     bool m_ActiveEnable;
     bool m_AutoEnable;

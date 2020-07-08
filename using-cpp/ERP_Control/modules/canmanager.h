@@ -6,8 +6,9 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QThread>
 
-class CanManager : public QObject
+class CanManager : public QThread
 {
     Q_OBJECT
 
@@ -35,20 +36,10 @@ public:
     QString frameData() const { return m_FrameData;}
 
     void setFrameID(const QString &frameID);
-//    {
-//        if(m_FrameID == frameID)
-//            return;
-//        m_FrameID = frameID;
-//        emit frameIDChanged(m_FrameID);
-
-//    }
     void setFrameData(const QString &frameData);
-//    {
-//        if(m_FrameData == frameData)
-//            return;
-//        m_FrameData = frameData;
-//        emit frameDataChanged(m_FrameData);
-//    }
+
+
+
 
     static QString m_TextArea;
 
@@ -67,6 +58,7 @@ private:
 
     QString m_FrameID;
     QString m_FrameData;
+    QCanBusFrame m_busFrame;
 
 
 
@@ -77,6 +69,8 @@ signals:
     void frameDataChanged(QString frameData);
 
 public slots:
+    //Thread
+    void run();
 
 };
 

@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     CanManager canManager;
     canManager.connectDevice();
 
-
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CanManager>("unmansol.erp42.canmanager", 0, 1, "CanManager");
@@ -32,10 +31,11 @@ int main(int argc, char *argv[])
 
 
     PCanManager pcanManager;
+    pcanManager.start();
     qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");
     engine.rootContext()->setContextProperty("pcanManager", &pcanManager);
 
-    pcanManager.start();
+//    pcanManager.start();
 
 
     comboboxmodel combo;
