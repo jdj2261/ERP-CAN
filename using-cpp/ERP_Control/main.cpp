@@ -21,34 +21,31 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 
-    CanManager canManager;
-    canManager.connectDevice();
+    CanManager *canManager = new CanManager();
+    canManager->connectDevice();
+//    canManager.start();
 
     QQmlApplicationEngine engine;
 
     qmlRegisterType<CanManager>("unmansol.erp42.canmanager", 0, 1, "CanManager");
-    engine.rootContext()->setContextProperty("canManager", &canManager);
+    engine.rootContext()->setContextProperty("canManager", canManager);
 
-
+    engine.rootContext();
     PCanManager pcanManager;
-    pcanManager.start();
     qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");
     engine.rootContext()->setContextProperty("pcanManager", &pcanManager);
 
-//    pcanManager.start();
+//    comboboxmodel combo;
 
+//    QStringList tmp;
+//    tmp << "peakcan" << "passthrucan" << "socketcan" << "tinycan" << "virtualcan";
+//    combo.setComboList(tmp);
 
-    comboboxmodel combo;
+//    QQmlContext *ownContext = engine.rootContext();
+//    ownContext->setContextProperty("myModel", QVariant::fromValue(combo.comboList()));
 
-    QStringList tmp;
-    tmp << "peakcan" << "passthrucan" << "socketcan" << "tinycan" << "virtualcan";
-    combo.setComboList(tmp);
-
-    QQmlContext *ownContext = engine.rootContext();
-    ownContext->setContextProperty("myModel", QVariant::fromValue(combo.comboList()));
-
-    QQmlContext *classContext = engine.rootContext();
-    classContext->setContextProperty("comboModel", &combo);
+//    QQmlContext *classContext = engine.rootContext();
+//    classContext->setContextProperty("comboModel", &combo);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

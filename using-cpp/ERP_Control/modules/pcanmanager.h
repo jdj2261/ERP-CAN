@@ -5,12 +5,36 @@
 #include <QThread>
 #include <QDebug>
 
-//QString CanManager::m_TextArea;
-
-class PCanManager : public QThread
+typedef struct _pc_to_erp42
 {
+    quint8 MorA = 0x01;
+    quint8 E_stop = 0x00;
+    quint8 gear = 0x01;
+    union speed{ uint8_t speed[2]; uint16_t _speed;};
+    union steer{ char steer[2]; short _steer;};
+    uint8_t brake = 0x50;
+    quint8 alive;
+
+}PC2ERP;
+
+typedef struct _erp42_to_pc
+{
+    uint8_t MorA = 0x01;
+    uint8_t E_stop = 0x00;
+    uint8_t gear = 0x01;
+    union speed{ uint8_t speed[2]; uint16_t _speed;};
+    union steer{ char steer[2]; short _steer;};
+    uint8_t brake = 0x50;
+    uint8_t alive;
+}ERP2PC;
+
+class PCanManager : public QObject
+{
+
     Q_OBJECT
+
 public:
+    CanManager *a;
 
     enum Gear{D = 0x00, N = 0x04, R = 0x08};
     Q_ENUM(Gear)
@@ -42,7 +66,7 @@ public:
                WRITE setBrake NOTIFY BrakeChanged)
 
 
-    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
+//    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
 
     Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
 
@@ -70,6 +94,9 @@ private:
     QTimer *timerSendMsg;
 
     const QString m_getData;
+    double m_getSteerData;
+
+
     QVariant data_{ "" };
 
 public:
@@ -82,7 +109,7 @@ public:
     bool GearDrive() const {return m_GearDrive;}
     bool GearNeutral() const {return m_GearNeutral;}
     bool GearReverse() const {return m_GearReverse;}
-    void run();
+//    void run();
 
     QString getData(QString m_getData) const {return m_getData;}
 
@@ -92,6 +119,8 @@ public:
 
     Gear GearSelDisp() const {return m_GearSelDisp;}
     quint8 AlvCnt() const {return m_AlvCnt;}
+
+    double getSteerData(double m_getSteerData) const {return m_getSteerData;}
 
     Q_INVOKABLE void setActive(const bool &);
     Q_INVOKABLE void setAutoEnable(const bool &);
@@ -111,6 +140,7 @@ public:
     Q_INVOKABLE void incAlvCnt();
 
     Q_INVOKABLE QVariant getData() const { return data_; }
+
 
 signals:
     void ActiveChanged();
@@ -140,7 +170,7 @@ public slots:
     }
 
 private slots:
-    void sendCmdMessage();
+//    void sendCmdMessage();
 //    void onActiveChanged();
 
 };

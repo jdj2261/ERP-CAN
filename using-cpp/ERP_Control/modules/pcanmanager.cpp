@@ -3,10 +3,11 @@
 #define T true
 
 QString CanManager::m_TextArea;
-//extern QCanBusDevice *send_device;
+extern QCanBusDevice *send_device;
+extern QCanBusFrame m_busFrame;
 //QCanBusFrame CanManager::m_busFrame;
 
-PCanManager::PCanManager(QObject *parent) :
+PCanManager::PCanManager(QObject *parent):QObject(parent),
     m_ActiveEnable(false),
     m_AutoEnable(false),
     m_EstopEnable(false),
@@ -21,10 +22,10 @@ PCanManager::PCanManager(QObject *parent) :
     m_Brake(0),
     timerSendMsg(nullptr)
 {
-    m_AlvCnt = 0;
-    timerSendMsg = new QTimer(this);
-    timerSendMsg->setTimerType(Qt::PreciseTimer);
-    connect(timerSendMsg, SIGNAL(timeout()), this, SLOT(sendCmdMessage()));
+//    m_AlvCnt = 0;
+//    timerSendMsg = new QTimer(this);
+//    timerSendMsg->setTimerType(Qt::PreciseTimer);
+//    connect(timerSendMsg, SIGNAL(timeout()), this, SLOT(sendCmdMessage()));
 }
 void PCanManager::incAlvCnt()
 {
@@ -148,7 +149,13 @@ void PCanManager::setSteerAngle(const double &arg)
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
     m_SteerAngle = arg;
-//    std::cout << " test" << getData(CanManager::m_TextArea).toStdString() << std::endl;
+
+    setData(m_SteerAngle + m_Speed);
+
+    std::cout << " test 1 : " << getData(CanManager::m_TextArea).toStdString() << std::endl;
+    std::cout << " test 2 : " << a->ShowData().toStdString() << std::endl;
+    std::cout << " test 3 : " << m_SteerAngle << std::endl;
+
     emit SteerAngleChanged();
 }
 void PCanManager::setSpeed(const quint16 &arg)
@@ -158,7 +165,9 @@ void PCanManager::setSpeed(const quint16 &arg)
     m_Speed = arg;
 //    std::cout << " test" << getData(CanManager::m_TextArea).toStdString() << std::endl;
     emit SpeedChanged();
+    setData(m_SteerAngle + m_Speed);
 }
+
 void PCanManager::setBrake(const quint8 &arg)
 {
     if(T)
@@ -166,48 +175,51 @@ void PCanManager::setBrake(const quint8 &arg)
     m_Brake = arg;
 //    std::cout << " test" << getData(CanManager::m_TextArea).toStdString() << std::endl;
     emit BrakeChanged();
+    setData(m_SteerAngle + m_Speed);
 }
 
-void PCanManager::sendCmdMessage()
-{
-    //check acc, aeb, eps state
-    if(T)
-        qDebug() << tr("%1 >").arg(__func__);
-}
-
-void PCanManager::run()
-{
-    {
-        qDebug() << "Inside the worker thread!";
-
-        while(1){
-
-                setData(m_SteerAngle + m_Speed);
-
-                QString id = "181";
-                const uint frameId = id.toUInt(nullptr, 16);
 
 
-                QString data = "20000001f0";
-                const QByteArray payload = QByteArray::fromHex(data.remove(QLatin1Char(' ')).toLatin1());
+//void PCanManager::sendCmdMessage()
+//{
+//    //check acc, aeb, eps state
+//    if(T)
+//        qDebug() << tr("%1 >").arg(__func__);
+//}
 
-                QByteArray ba_as_hex_string = payload.toHex();
+//void PCanManager::run()
+//{
+//    {
+//        qDebug() << "Inside the worker thread!";
 
-                uint num = frameId;
-                std::cout << std::hex << num << std::endl;
-                std::cout << ba_as_hex_string.toStdString() << std::endl;
+//        while(1){
 
-                QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
+//                setData(m_SteerAngle + m_Speed);
+
+//                QString id = "181";
+//                const uint frameId = id.toUInt(nullptr, 16);
 
 
-//                CanManager::sendRawFrame(frame1);
+//                QString data = "20000001f0";
+//                const QByteArray payload = QByteArray::fromHex(data.remove(QLatin1Char(' ')).toLatin1());
 
-//                std::cout << send_device << std::endl;
+//                QByteArray ba_as_hex_string = payload.toHex();
 
-                msleep(20);
-        }
-    }
-}
+//                uint num = frameId;
+//                std::cout << std::hex << num << std::endl;
+//                std::cout << ba_as_hex_string.toStdString() << std::endl;
+
+//                QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
+
+
+////                CanManager::sendRawFrame(frame1);
+
+////                std::cout << send_device << std::endl;
+
+//                msleep(20);
+//        }
+//    }
+//}
 
 
 

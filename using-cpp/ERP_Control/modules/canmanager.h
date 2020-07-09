@@ -6,9 +6,11 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QTimer>
+#include <iostream>
 #include <QThread>
 
-class CanManager : public QThread
+class CanManager : public QObject
 {
     Q_OBJECT
 
@@ -38,11 +40,17 @@ public:
     void setFrameID(const QString &frameID);
     void setFrameData(const QString &frameData);
 
-
-
-
     static QString m_TextArea;
+    static QCanBusFrame m_busFrame;
+    static QString testID;
+    QString m_FrameID;
 
+    QString ShowData()
+    {
+        std::cout << "CanManager Object!!" << std::endl;
+//        std::cout << testID.toStdString() << std::endl;
+        return testID;
+    }
 
 private:
     QCanBusDevice *m_canDevice;
@@ -54,11 +62,13 @@ private:
     QVariant bitRate;
     QString pluginName;
     QString deviceInterfaceName;
-    QString m_test;
 
-    QString m_FrameID;
     QString m_FrameData;
-    QCanBusFrame m_busFrame;
+    const QCanBusFrame m_Frame;
+
+    //Thread
+    void run();
+//    QCanBusFrame m_busFrame;
 
 
 
@@ -69,8 +79,6 @@ signals:
     void frameDataChanged(QString frameData);
 
 public slots:
-    //Thread
-    void run();
 
 };
 

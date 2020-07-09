@@ -146,9 +146,9 @@ ApplicationWindow {
 
     Connections {
         target: pcanManager
-        onStarted: {
-            print('worker thread started')
-        }
+//        onStarted: {
+//            print('worker thread started')
+//        }
 
         onDataChanged: {
             print('data changed to: ' + pcanManager.getData() );
@@ -157,7 +157,6 @@ ApplicationWindow {
     }
 
     Component.onDestruction: pcanManager.terminate();
-
 
 }
 
