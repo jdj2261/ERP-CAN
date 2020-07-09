@@ -47,8 +47,8 @@ ApplicationWindow {
 
     Text {
         id: textID
-        x: 700
-        y: 70
+        x: 650
+        y: 200
         width: 100
         height: 40
         font.pixelSize: 12
@@ -59,8 +59,8 @@ ApplicationWindow {
 
     TextField {
         id: textInputID
-        x: 680
-        y: 90
+        x: 630
+        y: 220
         width: 100
         height: 40
         font.pixelSize: 12
@@ -70,8 +70,8 @@ ApplicationWindow {
 
     Text {
         id: textData
-        x: 930
-        y: 70
+        x: 880
+        y: 200
         width: 100
         height: 40
         font.pixelSize: 12
@@ -81,8 +81,8 @@ ApplicationWindow {
 
     TextField {
         id: textInputDATA
-        x: 800
-        y: 90
+        x: 750
+        y: 220
         width: 300
         height: 40
         font.pixelSize: 12
@@ -93,8 +93,8 @@ ApplicationWindow {
 
     Button {
         id: proccessButton
-        x: 1120
-        y: 90
+        x: 1070
+        y: 220
         width: 70
         height: 40
         text: "Send"

@@ -8,24 +8,24 @@
 typedef struct _pc_to_erp42
 {
     quint8 MorA = 0x01;
-    quint8 E_stop = 0x00;
-    quint8 gear = 0x01;
-    union speed{ uint8_t speed[2]; uint16_t _speed;};
+    quint8 ESTOP = 0x00;
+    quint8 GEAR = 0x01;
+    union speed{ uint16_t speed[2]; uint16_t _speed;};
     union steer{ char steer[2]; short _steer;};
-    uint8_t brake = 0x50;
+    quint8 brake;
     quint8 alive;
 
 }PC2ERP;
 
 typedef struct _erp42_to_pc
 {
-    uint8_t MorA = 0x01;
-    uint8_t E_stop = 0x00;
-    uint8_t gear = 0x01;
-    union speed{ uint8_t speed[2]; uint16_t _speed;};
+    quint8 MorA = 0x00;
+    quint8 ESTOP = 0x01;
+    quint8 GEAR = 0x02;
+    union speed{ uint16_t speed[2]; uint16_t _speed;};
     union steer{ char steer[2]; short _steer;};
-    uint8_t brake = 0x50;
-    uint8_t alive;
+    quint8 brake;
+    quint8 alive;
 }ERP2PC;
 
 class PCanManager : public QObject
@@ -36,7 +36,12 @@ class PCanManager : public QObject
 public:
     CanManager *a;
 
+    enum Mode{Mannaul = 0x00, Auto = 0x01};
+    enum Estop{Off = 0x00, On = 0x02};
     enum Gear{D = 0x00, N = 0x04, R = 0x08};
+
+    Q_ENUM(Mode)
+    Q_ENUM(Estop)
     Q_ENUM(Gear)
 
     Q_PROPERTY(bool Active READ Active WRITE setActive NOTIFY ActiveChanged)
@@ -65,6 +70,8 @@ public:
     Q_PROPERTY(quint8 Brake READ Brake
                WRITE setBrake NOTIFY BrakeChanged)
 
+    Q_PROPERTY(QVariant QMorA READ QMorA WRITE setQMorA NOTIFY QMorAChanged)
+
 
 //    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
 
@@ -88,6 +95,8 @@ private:
     double m_SteerAngle;
     quint16 m_Speed;
     quint8 m_Brake;
+
+    QVariant m_QMorA;
 
     quint8 m_AlvCnt;
     Gear m_GearSelDisp;
@@ -116,6 +125,8 @@ public:
     double SteerAngle() const {return m_SteerAngle;}
     quint16 Speed() const {return m_Speed;}
     quint8 Brake() const {return m_Brake;}
+    QVariant QMorA() const {return m_QMorA;}
+
 
     Gear GearSelDisp() const {return m_GearSelDisp;}
     quint8 AlvCnt() const {return m_AlvCnt;}
@@ -135,6 +146,7 @@ public:
     Q_INVOKABLE void setSteerAngle(const double &);
     Q_INVOKABLE void setSpeed(const quint16 &);
     Q_INVOKABLE void setBrake(const quint8 &);
+    Q_INVOKABLE void setQMorA(const QVariant &);
 
     Q_INVOKABLE void resetAlvCnt();
     Q_INVOKABLE void incAlvCnt();
@@ -155,13 +167,14 @@ signals:
     void SteerAngleChanged();
     void SpeedChanged();
     void BrakeChanged();
+    void QMorAChanged();
 
     void GearSelDispChanged();
     void AlvCntChanged();
     void dataChanged( const QVariant data );
 
 
-public slots:
+private slots:
     void setData( const QVariant data ) {
         if ( data != data_ ) {
             data_ = data;
@@ -169,9 +182,12 @@ public slots:
         }
     }
 
-private slots:
-//    void sendCmdMessage();
-//    void onActiveChanged();
+//    void setQMorA( const  data ) {
+//        if ( data != data_ ) {
+//            data_ = data;
+//            emit dataChanged( data_ );
+//        }
+//    }
 
 };
 #endif // PCanManager_H

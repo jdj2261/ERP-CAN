@@ -20,6 +20,7 @@ PCanManager::PCanManager(QObject *parent):QObject(parent),
     m_SteerAngle(0),
     m_Speed(0),
     m_Brake(0),
+    m_QMorA(0x01),
     timerSendMsg(nullptr)
 {
 //    m_AlvCnt = 0;
@@ -176,8 +177,15 @@ void PCanManager::setBrake(const quint8 &arg)
 //    std::cout << " test" << getData(CanManager::m_TextArea).toStdString() << std::endl;
     emit BrakeChanged();
     setData(m_SteerAngle + m_Speed);
+    setQMorA(m_SteerAngle);
+    emit QMorAChanged();
 }
 
+
+void PCanManager::setQMorA(const QVariant &arg)
+{
+
+}
 
 
 //void PCanManager::sendCmdMessage()

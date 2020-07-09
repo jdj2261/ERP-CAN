@@ -8,8 +8,7 @@
 
 QCanBusDevice *CanManager::send_device;
 QCanBusFrame CanManager::m_busFrame;
-
-QString CanManager::testID;
+QString CanManager::SendButtonID;
 
 CanManager::CanManager(QObject *parent) : QObject(parent),
     m_canDevice(nullptr)
@@ -149,7 +148,7 @@ void CanManager::processFramesWritten(qint64 count)
     qDebug() << tr("%1 frames written").arg(m_numberFramesWritten);
 }
 
-void CanManager::sendRawFrame(QCanBusFrame &frame)
+void CanManager::sendRawFrame(QCanBusFrame &frame) const
 {
     if (!send_device)
         return;
@@ -179,7 +178,7 @@ void CanManager::buttontest()
     qDebug()<<m_FrameID<<m_FrameData;
 
     QString id = m_FrameID;
-    testID = m_FrameID;
+    SendButtonID = m_FrameID;
     const uint frameId = id.toUInt(nullptr, 16);
 
     QString data = m_FrameData;

@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 import Qt.labs.calendar 1.0
+import QtQuick.Layouts 1.0
 
 Page {
     id: page
@@ -31,6 +32,7 @@ Page {
     property alias steerAngle: spinBoxSteerAngle.value
     property alias speed: sliderSpeed.value
     property alias brake: sliderBrake.value
+//    property alias mode : switchAuto.checked
 
     header: Label {
         text: qsTr("ERP42 Control Panel")
@@ -53,7 +55,6 @@ Page {
         spacing: 10
 
         Row {
-            id: row1
             width: 550
             height: 30
             spacing: 20
@@ -74,7 +75,6 @@ Page {
         }
 
         Row {
-            id: row3
             width: 550
             height: 30
             spacing: 20
@@ -102,7 +102,6 @@ Page {
         }
 
         Row {
-            id: row2
             width: 550
             height: 30
             spacing: 20
@@ -133,7 +132,6 @@ Page {
     }
 
     Row {
-        id: row4
         x: 22
         y: 200
         width: 605
@@ -173,7 +171,7 @@ Page {
                 value: dialSteerAngle.value //steerAngle
                 anchors.horizontalCenter: parent.horizontalCenter
                 Text {
-                    id: text4
+                    id: textsteerMin
                     text: "-28"
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
@@ -181,7 +179,7 @@ Page {
                 }
 
                 Text {
-                    id: text5
+                    id: textsteerMax
                     text: "28"
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right
@@ -195,7 +193,7 @@ Page {
             width: 200
             height: 280
             Text {
-                id: text3
+                id: textSpeed
                 text: qsTr("Speed[KPH]")
                 font.pixelSize: 12
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -287,18 +285,18 @@ Page {
     }
 
     Text {
-        id: text6
-        x: 20
-        y: 533
+        id: textRawData
+        x: 630
+        y: 25
         text: qsTr("Console Output")
         font.pixelSize: 12
     }
 
     TextArea {
-        id: textArea
-        x: 22
-        y: 561
-        width: 550
+        id: textAreaRawData
+        x: 630
+        y: 55
+        width: 573
         height: 44
         text: qsTr(canManager.TextArea)
         renderType: Text.NativeRendering
@@ -310,4 +308,137 @@ Page {
         //            TextEdit: canManager.TextArea
     }
 
+
+
+    Row {
+        id: row5
+        x: 22
+        y: 517
+        width: 800
+        height: 100
+        spacing: 20
+
+        //        anchors.horizontalCenter: parent.horizontalCenter
+        //            x: 12
+        //            y: 400
+        //            width: 624
+        //            height: 40
+        //        spacing: 42
+        Column{
+            width: 50
+            height: 50
+            spacing: 10
+
+            Text {
+
+                id: text1
+                width: 50
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("AorM")
+            }
+            TextArea{
+                width: 50
+                height: 30
+                text: qsTr(pcanManager.QMorA)
+            }
+        }
+        Column{
+            width: 50
+            height: 50
+            spacing: 10
+            Text {
+                id: text2
+                width: 50
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("E-STOP")
+            }
+            TextArea{
+                width: 50
+                height: 30
+
+            }
+        }
+        Column{
+            width: 50
+            height: 50
+            spacing: 10
+            Text {
+                id: text3
+                width: 50
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("GEAR")
+            }
+            TextArea{
+                width: 50
+                height: 30
+
+            }
+        }
+        Column{
+            width: 100
+            height: 50
+            spacing: 10
+            Text {
+                id: text4
+                width: 100
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Speed")
+            }
+            TextArea{
+                width: 100
+                height: 30
+                text: qsTr(pcanManager.QMorA)
+
+            }
+        }
+        Column{
+            width: 100
+            height: 50
+            spacing: 10
+
+            Text {
+                id: text5
+                width: 100
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Steer")
+
+            }
+            TextArea{
+                width: 100
+                height: 30
+            }
+        }
+        Column{
+            width: 100
+            height: 50
+            spacing: 10
+            Text {
+                id: text6
+                width: 100
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Brake")
+            }
+            TextArea{
+                width: 100
+                height: 30
+
+            }
+        }
+        Column{
+            width: 50
+            height: 50
+            spacing: 10
+            Text {
+                id: text7
+                width: 50
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Alive")
+            }
+            TextArea{
+                width: 50
+                height: 30
+            }
+        }
+    }
 }
+

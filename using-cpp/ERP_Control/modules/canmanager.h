@@ -16,6 +16,7 @@ class CanManager : public QObject
 
 public:
     explicit CanManager(QObject *parent = nullptr);
+    virtual ~CanManager() {}
     Q_PROPERTY(QString TextArea  READ TextArea WRITE setTextArea NOTIFY TextAreaChanged)
     Q_PROPERTY(QString frameID   READ frameID WRITE setFrameID NOTIFY frameIDChanged)
     Q_PROPERTY(QString frameData READ frameData WRITE setFrameData NOTIFY frameDataChanged)
@@ -23,57 +24,54 @@ public:
     Q_INVOKABLE void setTextArea(const QString &);
     Q_INVOKABLE void buttontest();
 
-    bool loadConf(const QString &path);
+    void setFrameID(const QString &frameID);
+    void setFrameData(const QString &frameData);
+
+    /* Can connect function */
     void connectDevice();
     void disconnectDevice();
-//    void sendRawFrame(const QCanBusFrame &frame) const;
-    void sendMessege(const QVariantMap &msg) const;
     void processReceivedFrames(); //dbc parsing using GENEVI/CANdb
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
-    static void sendRawFrame(QCanBusFrame &frame) ;
+    void sendRawFrame(QCanBusFrame &frame) const;
 
     QString TextArea() const { return m_TextArea;}
     QString frameID() const { return m_FrameID;}
     QString frameData() const { return m_FrameData;}
 
-    void setFrameID(const QString &frameID);
-    void setFrameData(const QString &frameData);
-
+    /* static */
     static QString m_TextArea;
     static QCanBusFrame m_busFrame;
-    static QString testID;
-    QString m_FrameID;
+    static QString SendButtonID;
+    static QCanBusDevice *send_device;
 
+
+    /* test */
     QString ShowData()
     {
         std::cout << "CanManager Object!!" << std::endl;
 //        std::cout << testID.toStdString() << std::endl;
-        return testID;
+        return SendButtonID;
     }
 
 private:
     QCanBusDevice *m_canDevice;
 //    QCanBusDevice *send_device;
-    static QCanBusDevice *send_device;
-    bool bInitiated;
-    QJsonObject jsonConfObj;
+
     qint64 m_numberFramesWritten;
     QVariant bitRate;
     QString pluginName;
     QString deviceInterfaceName;
 
+    QString m_FrameID;
     QString m_FrameData;
+
     const QCanBusFrame m_Frame;
 
     //Thread
     void run();
-//    QCanBusFrame m_busFrame;
-
-
 
 signals:
-    void canMessageReceived(const QVariantMap&);
     void TextAreaChanged();
     void frameIDChanged(QString frameID);
     void frameDataChanged(QString frameData);
