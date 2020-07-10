@@ -17,12 +17,16 @@ class CanManager : public QObject
 public:
     explicit CanManager(QObject *parent = nullptr);
     virtual ~CanManager() {}
-    Q_PROPERTY(QString TextArea  READ TextArea WRITE setTextArea NOTIFY TextAreaChanged)
-    Q_PROPERTY(QString frameID   READ frameID WRITE setFrameID NOTIFY frameIDChanged)
-    Q_PROPERTY(QString frameData READ frameData WRITE setFrameData NOTIFY frameDataChanged)
+    Q_PROPERTY(QString TextArea  READ getTextArea WRITE setTextArea NOTIFY TextAreaChanged)
+    Q_PROPERTY(QString frameID   READ getframeID WRITE setFrameID NOTIFY frameIDChanged)
+    Q_PROPERTY(QString frameData READ getframeData WRITE setFrameData NOTIFY frameDataChanged)
 
     Q_INVOKABLE void setTextArea(const QString &);
     Q_INVOKABLE void buttontest();
+
+    QString getTextArea() const { return m_TextArea;}
+    QString getframeID() const { return m_FrameID;}
+    QString getframeData() const { return m_FrameData;}
 
     void setFrameID(const QString &frameID);
     void setFrameData(const QString &frameData);
@@ -34,10 +38,6 @@ public:
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
     void sendRawFrame(QCanBusFrame &frame) const;
-
-    QString TextArea() const { return m_TextArea;}
-    QString frameID() const { return m_FrameID;}
-    QString frameData() const { return m_FrameData;}
 
     /* static */
     static QString m_TextArea;

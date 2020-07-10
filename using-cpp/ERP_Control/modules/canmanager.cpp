@@ -56,7 +56,7 @@ void CanManager::connectDevice()
 
     connect(m_canDevice, &QCanBusDevice::errorOccurred, this, &CanManager::processErrors);
     connect(m_canDevice, &QCanBusDevice::framesReceived, this, &CanManager::processReceivedFrames);
-    connect(m_canDevice, &QCanBusDevice::framesWritten, this, &CanManager::processFramesWritten);
+//    connect(m_canDevice, &QCanBusDevice::framesWritten, this, &CanManager::processFramesWritten);
 
     if (!m_canDevice->connectDevice()) {
         qWarning() << tr("Connection error: %1").arg(m_canDevice->errorString());

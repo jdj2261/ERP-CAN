@@ -32,8 +32,8 @@ Page {
     property alias steerAngle: spinBoxSteerAngle.value
     property alias speed: sliderSpeed.value
     property alias brake: sliderBrake.value
-//    property alias mode : switchAuto.checked
 
+    //    property alias mode : switchAuto.checked
     header: Label {
         text: qsTr("ERP42 Control Panel")
         horizontalAlignment: Text.AlignHCenter
@@ -62,6 +62,7 @@ Page {
             Switch {
                 id: switchAuto
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("AUTO")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -69,6 +70,7 @@ Page {
             Switch {
                 id: switchEstop
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("ESTOP")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -82,6 +84,7 @@ Page {
             Switch {
                 id: switchSteerControl
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("Steer Control")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -89,6 +92,7 @@ Page {
             Switch {
                 id: switchSpeedControl
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("Speed Control")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -96,6 +100,7 @@ Page {
             CheckBox {
                 id: checkIgnOvr
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("Ignore")
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -121,6 +126,7 @@ Page {
             RadioButton {
                 id: rbuttonNeutral
                 enabled: switchActive.checked
+                checked: switchActive.checked
                 text: qsTr("NEUTRAL")
             }
             RadioButton {
@@ -308,8 +314,6 @@ Page {
         //            TextEdit: canManager.TextArea
     }
 
-
-
     Row {
         id: row5
         x: 22
@@ -324,7 +328,7 @@ Page {
         //            width: 624
         //            height: 40
         //        spacing: 42
-        Column{
+        Column {
             width: 50
             height: 50
             spacing: 10
@@ -334,15 +338,17 @@ Page {
                 id: text1
                 width: 50
                 horizontalAlignment: Text.AlignHCenter
-                text: qsTr("AorM")
+                text: qsTr("MorA")
             }
-            TextArea{
+            TextArea {
                 width: 50
                 height: 30
+                enabled: switchActive.checked
                 text: qsTr(pcanManager.QMorA)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 50
             height: 50
             spacing: 10
@@ -352,13 +358,15 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("E-STOP")
             }
-            TextArea{
+            TextArea {
                 width: 50
                 height: 30
-
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.ESTOP)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 50
             height: 50
             spacing: 10
@@ -368,13 +376,15 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("GEAR")
             }
-            TextArea{
+            TextArea {
                 width: 50
                 height: 30
-
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.GEAR)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 100
             height: 50
             spacing: 10
@@ -384,14 +394,15 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Speed")
             }
-            TextArea{
+            TextArea {
                 width: 100
                 height: 30
-                text: qsTr(pcanManager.QMorA)
-
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.SPEED)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 100
             height: 50
             spacing: 10
@@ -401,14 +412,16 @@ Page {
                 width: 100
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Steer")
-
             }
-            TextArea{
+            TextArea {
                 width: 100
                 height: 30
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.STEER)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 100
             height: 50
             spacing: 10
@@ -418,13 +431,15 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Brake")
             }
-            TextArea{
+            TextArea {
                 width: 100
                 height: 30
-
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.BRAKE)
+                readOnly: true
             }
         }
-        Column{
+        Column {
             width: 50
             height: 50
             spacing: 10
@@ -434,11 +449,13 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Alive")
             }
-            TextArea{
+            TextArea {
                 width: 50
                 height: 30
+                enabled: switchActive.checked
+                text: qsTr(pcanManager.ALIVE)
+                readOnly: true
             }
         }
     }
 }
-

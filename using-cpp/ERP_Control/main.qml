@@ -156,7 +156,7 @@ ApplicationWindow {
         }
     }
 
-    Component.onDestruction: pcanManager.terminate();
+//    Component.onDestruction: pcanManager.terminate();
 
 }
 

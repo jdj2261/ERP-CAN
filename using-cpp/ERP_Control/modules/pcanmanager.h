@@ -7,13 +7,13 @@
 
 typedef struct _pc_to_erp42
 {
-    quint8 MorA = 0x01;
-    quint8 ESTOP = 0x00;
-    quint8 GEAR = 0x01;
+    quint8 MorA;
+    quint8 ESTOP;
+    quint8 GEAR;
     union speed{ uint16_t speed[2]; uint16_t _speed;};
     union steer{ char steer[2]; short _steer;};
-    quint8 brake;
-    quint8 alive;
+    quint8 brake = 0;
+    quint8 alive = 0;
 
 }PC2ERP;
 
@@ -28,12 +28,15 @@ typedef struct _erp42_to_pc
     quint8 alive;
 }ERP2PC;
 
-class PCanManager : public QObject
+class PCanManager : public QThread
 {
 
     Q_OBJECT
 
 public:
+    explicit PCanManager(QObject *parent = nullptr);
+    virtual ~PCanManager() {}
+
     CanManager *a;
 
     enum Mode{Mannaul = 0x00, Auto = 0x01};
@@ -44,42 +47,87 @@ public:
     Q_ENUM(Estop)
     Q_ENUM(Gear)
 
-    Q_PROPERTY(bool Active READ Active WRITE setActive NOTIFY ActiveChanged)
-    Q_PROPERTY(bool AutoEnable READ AutoEnable
+    Q_PROPERTY(bool Active READ getActive WRITE setActive NOTIFY ActiveChanged)
+    Q_PROPERTY(bool AutoEnable READ getAutoEnable
                WRITE setAutoEnable NOTIFY AutoEnableChanged)
-    Q_PROPERTY(bool EstopEnable READ EstopEnable
+    Q_PROPERTY(bool EstopEnable READ getEstopEnable
                WRITE setEstopEnable NOTIFY EstopEnableChanged)
-    Q_PROPERTY(bool SteerEnable READ SteerEnable
+    Q_PROPERTY(bool SteerEnable READ getSteerEnable
                WRITE setSteerEnable NOTIFY SteerEnableChanged)
-    Q_PROPERTY(bool SpeedEnable READ SpeedEnable
+    Q_PROPERTY(bool SpeedEnable READ getSpeedEnable
                WRITE setSpeedEnable NOTIFY SpeedEnableChanged)
-    Q_PROPERTY(bool OverrideIgnore READ OverrideIgnore
+    Q_PROPERTY(bool OverrideIgnore READ getOverrideIgnore
                WRITE setOverrideIgnore NOTIFY OverrideIgnoreChanged)
-
-    Q_PROPERTY(bool GearDrive READ GearDrive
+    Q_PROPERTY(bool GearDrive READ getGearDrive
                WRITE setGearDrive NOTIFY GearDriveChanged)
-    Q_PROPERTY(bool GearNeutral READ GearNeutral
+    Q_PROPERTY(bool GearNeutral READ getGearNeutral
                WRITE setGearNeutral NOTIFY GearNeutralChanged)
-    Q_PROPERTY(bool GearReverse READ GearReverse
+    Q_PROPERTY(bool GearReverse READ getGearReverse
                WRITE setGearReverse NOTIFY GearReverseChanged)
-
-    Q_PROPERTY(double SteerAngle READ SteerAngle
+    Q_PROPERTY(double SteerAngle READ getSteerAngle
                WRITE setSteerAngle NOTIFY SteerAngleChanged)
-    Q_PROPERTY(quint16 Speed READ Speed
+    Q_PROPERTY(quint16 Speed READ getSpeed
                WRITE setSpeed NOTIFY SpeedChanged)
-    Q_PROPERTY(quint8 Brake READ Brake
+    Q_PROPERTY(quint8 Brake READ getBrake
                WRITE setBrake NOTIFY BrakeChanged)
 
-    Q_PROPERTY(QVariant QMorA READ QMorA WRITE setQMorA NOTIFY QMorAChanged)
-
-
-//    Q_PROPERTY(quint8 AlvCnt READ AlvCnt NOTIFY AlvCntChanged)
+    Q_PROPERTY(QString QMorA READ getQMorA NOTIFY QMorAChanged)
+    Q_PROPERTY(QString ESTOP READ getESTOP NOTIFY ESTOPChanged)
+    Q_PROPERTY(QString GEAR  READ getGEAR  NOTIFY GEARChanged)
+    Q_PROPERTY(QString SPEED READ getSPEED NOTIFY SPEEDChanged)
+    Q_PROPERTY(QString STEER READ getSTEER NOTIFY STEERChanged)
+    Q_PROPERTY(QString BRAKE READ getBRAKE NOTIFY BRAKEChanged)
+    Q_PROPERTY(QString ALIVE READ getALIVE NOTIFY ALIVEChanged)
 
     Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
 
-    explicit PCanManager(QObject *parent = nullptr);
-    virtual ~PCanManager() {}
+    Q_INVOKABLE void setActive(const bool &);
+    Q_INVOKABLE void setAutoEnable(const bool &);
+    Q_INVOKABLE void setEstopEnable(const bool &);
+    Q_INVOKABLE void setSteerEnable(const bool &);
+    Q_INVOKABLE void setSpeedEnable(const bool &);
+    Q_INVOKABLE void setOverrideIgnore(const bool &);
+    Q_INVOKABLE void setGearDrive(const bool &);
+    Q_INVOKABLE void setGearNeutral(const bool &);
+    Q_INVOKABLE void setGearReverse(const bool &);
+    Q_INVOKABLE void setSteerAngle(const double &);
+    Q_INVOKABLE void setSpeed(const quint16 &);
+    Q_INVOKABLE void setBrake(const quint8 &);
+//    Q_INVOKABLE void setQMorA(const QString &);
+    Q_INVOKABLE QVariant getData() const { return data_; }
 
+    bool getActive() const {return m_ActiveEnable;}
+    bool getAutoEnable() const {return m_AutoEnable;}
+    bool getEstopEnable() const {return m_EstopEnable;}
+    bool getSteerEnable() const {return m_SteerEnable;}
+    bool getSpeedEnable() const {return m_SpeedEnable;}
+    bool getOverrideIgnore() const {return m_OverrideIgnore;}
+    bool getGearDrive() const {return m_GearDrive;}
+    bool getGearNeutral() const {return m_GearNeutral;}
+    bool getGearReverse() const {return m_GearReverse;}
+    double getSteerAngle() const {return m_SteerAngle;}
+
+    quint16 getSpeed() const {return m_Speed;}
+    quint8 getBrake() const {return m_Brake;}
+
+    QString getQMorA() const {return m_QMorA;}
+    QString getESTOP() const {return m_ESTOP;}
+    QString getGEAR() const {return m_GEAR;}
+    QString getSPEED() const {return m_SPEED;}
+    QString getSTEER() const {return m_STEER;}
+    QString getBRAKE() const {return m_BRAKE;}
+    QString getALIVE() const {return m_ALIVE;}
+
+    QString getData(QString m_getData) const {return m_getData;}
+
+    PC2ERP m_pc2erp;
+
+
+//    double getSteerData(double m_getSteerData) const {return m_getSteerData;}
+    void showData(quint8 data) const
+    {
+        std::cout << std::hex << +data << std::endl;
+    }
 
 private:
     bool m_ActiveEnable;
@@ -91,68 +139,25 @@ private:
     bool m_GearDrive;
     bool m_GearNeutral;
     bool m_GearReverse;
-
     double m_SteerAngle;
     quint16 m_Speed;
     quint8 m_Brake;
 
-    QVariant m_QMorA;
-
-    quint8 m_AlvCnt;
-    Gear m_GearSelDisp;
-    QTimer *timerSendMsg;
+    QString m_QMorA;
+    QString m_ESTOP;
+    QString m_GEAR;
+    QString m_SPEED;
+    QString m_STEER;
+    QString m_BRAKE;
+    QString m_ALIVE;
 
     const QString m_getData;
-    double m_getSteerData;
 
+//    double m_getSteerData;
 
     QVariant data_{ "" };
 
-public:
-    bool Active() const {return m_ActiveEnable;}
-    bool AutoEnable() const {return m_AutoEnable;}
-    bool EstopEnable() const {return m_EstopEnable;}
-    bool SteerEnable() const {return m_SteerEnable;}
-    bool SpeedEnable() const {return m_SpeedEnable;}
-    bool OverrideIgnore() const {return m_OverrideIgnore;}
-    bool GearDrive() const {return m_GearDrive;}
-    bool GearNeutral() const {return m_GearNeutral;}
-    bool GearReverse() const {return m_GearReverse;}
-//    void run();
-
-    QString getData(QString m_getData) const {return m_getData;}
-
-    double SteerAngle() const {return m_SteerAngle;}
-    quint16 Speed() const {return m_Speed;}
-    quint8 Brake() const {return m_Brake;}
-    QVariant QMorA() const {return m_QMorA;}
-
-
-    Gear GearSelDisp() const {return m_GearSelDisp;}
-    quint8 AlvCnt() const {return m_AlvCnt;}
-
-    double getSteerData(double m_getSteerData) const {return m_getSteerData;}
-
-    Q_INVOKABLE void setActive(const bool &);
-    Q_INVOKABLE void setAutoEnable(const bool &);
-    Q_INVOKABLE void setEstopEnable(const bool &);
-    Q_INVOKABLE void setSteerEnable(const bool &);
-    Q_INVOKABLE void setSpeedEnable(const bool &);
-    Q_INVOKABLE void setOverrideIgnore(const bool &);
-    Q_INVOKABLE void setGearDrive(const bool &);
-    Q_INVOKABLE void setGearNeutral(const bool &);
-    Q_INVOKABLE void setGearReverse(const bool &);
-
-    Q_INVOKABLE void setSteerAngle(const double &);
-    Q_INVOKABLE void setSpeed(const quint16 &);
-    Q_INVOKABLE void setBrake(const quint8 &);
-    Q_INVOKABLE void setQMorA(const QVariant &);
-
-    Q_INVOKABLE void resetAlvCnt();
-    Q_INVOKABLE void incAlvCnt();
-
-    Q_INVOKABLE QVariant getData() const { return data_; }
-
+    /* Thread */
 
 signals:
     void ActiveChanged();
@@ -167,11 +172,16 @@ signals:
     void SteerAngleChanged();
     void SpeedChanged();
     void BrakeChanged();
-    void QMorAChanged();
+    void QMorAChanged( );
+    void ESTOPChanged( );
+    void GEARChanged( );
+    void SPEEDChanged( );
+    void STEERChanged( );
+    void BRAKEChanged( );
+    void ALIVEChanged( );
 
-    void GearSelDispChanged();
-    void AlvCntChanged();
     void dataChanged( const QVariant data );
+
 
 
 private slots:
@@ -181,13 +191,8 @@ private slots:
             emit dataChanged( data_ );
         }
     }
+    void run();
 
-//    void setQMorA( const  data ) {
-//        if ( data != data_ ) {
-//            data_ = data;
-//            emit dataChanged( data_ );
-//        }
-//    }
 
 };
 #endif // PCanManager_H

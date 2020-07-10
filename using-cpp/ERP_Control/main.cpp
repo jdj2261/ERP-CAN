@@ -10,7 +10,7 @@
 #include "modules/pcanmanager.h"
 #include "modules/connect.h"
 #include <iostream>
-
+#include <QThread>
 
 
 int main(int argc, char *argv[])
@@ -31,10 +31,19 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("canManager", canManager);
 
     engine.rootContext();
-    PCanManager pcanManager;
-    qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");
-    engine.rootContext()->setContextProperty("pcanManager", &pcanManager);
 
+
+    PCanManager *pcanManager = new PCanManager();
+    qmlRegisterType<PCanManager>("unmansol.erp42.pcanmanager", 0, 1, "PCanManager");
+    engine.rootContext()->setContextProperty("pcanManager", pcanManager);
+    pcanManager->start();
+
+//    QThread *myThread = new QThread();
+//    PCanManager *pcanManager = new PCanManager();
+//    pcanManager->moveToThread(myThread);
+
+//    QObject::connect(myThread, SIGNAL(started()), pcanManager,SLOT(run()));
+//    myThread->start();
 //    comboboxmodel combo;
 
 //    QStringList tmp;
