@@ -5,13 +5,16 @@
 #include <QThread>
 #include <QDebug>
 
+#define SPEED_FACTOR 10
+#define STEER_FACTOR 71
+
 typedef struct _pc_to_erp42
 {
     quint8 MorA;
     quint8 ESTOP;
     quint8 GEAR;
-    union speed{ quint16 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ char steer[2]; short _steer;}; union steer steer;
+    union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
+    union steer{ quint8 steer[2]; quint16 _steer;}; union steer steer;
     quint8 brake = 0;
     quint8 alive = 0;
 
@@ -22,8 +25,8 @@ typedef struct _erp42_to_pc
     quint8 MorA = 0x00;
     quint8 ESTOP = 0x01;
     quint8 GEAR = 0x02;
-    union speed{ quint16 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ char steer[2]; short _steer;}; union steer steer;
+    union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
+    union steer{ quint8 steer[2]; quint16 _steer;}; union steer steer;
     quint8 brake;
     quint8 alive;
 }ERP2PC;
@@ -64,12 +67,14 @@ public:
                WRITE setGearNeutral NOTIFY GearNeutralChanged)
     Q_PROPERTY(bool GearReverse READ getGearReverse
                WRITE setGearReverse NOTIFY GearReverseChanged)
-    Q_PROPERTY(quint16 SteerAngle READ getSteerAngle
+    Q_PROPERTY(qint16 SteerAngle READ getSteerAngle
                WRITE setSteerAngle NOTIFY SteerAngleChanged)
     Q_PROPERTY(quint16 Speed READ getSpeed
                WRITE setSpeed NOTIFY SpeedChanged)
     Q_PROPERTY(quint8 Brake READ getBrake
                WRITE setBrake NOTIFY BrakeChanged)
+    Q_PROPERTY(quint16 Cycle READ getCycle
+               WRITE setCycle NOTIFY CycleChanged)
 
     Q_PROPERTY(QString QMorA READ getQMorA NOTIFY QMorAChanged)
     Q_PROPERTY(QString ESTOP READ getESTOP NOTIFY ESTOPChanged)
@@ -90,9 +95,11 @@ public:
     Q_INVOKABLE void setGearDrive(const bool &);
     Q_INVOKABLE void setGearNeutral(const bool &);
     Q_INVOKABLE void setGearReverse(const bool &);
-    Q_INVOKABLE void setSteerAngle(const quint16 &);
+    Q_INVOKABLE void setSteerAngle(const qint16 &);
     Q_INVOKABLE void setSpeed(const quint16 &);
     Q_INVOKABLE void setBrake(const quint8 &);
+    Q_INVOKABLE void setCycle(const quint16 &);
+
 //    Q_INVOKABLE void setQMorA(const QString &);
     Q_INVOKABLE QVariant getData() const { return data_; }
 
@@ -105,10 +112,11 @@ public:
     bool getGearDrive() const {return m_GearDrive;}
     bool getGearNeutral() const {return m_GearNeutral;}
     bool getGearReverse() const {return m_GearReverse;}
-    quint16 getSteerAngle() const {return m_SteerAngle;}
+    qint16 getSteerAngle() const {return m_SteerAngle;}
 
     quint16 getSpeed() const {return m_Speed;}
     quint8 getBrake() const {return m_Brake;}
+    quint16 getCycle() const {return m_Cycle;}
 
     QString getQMorA() const {return m_str_QMorA;}
     QString getESTOP() const {return m_str_ESTOP;}
@@ -140,9 +148,10 @@ private:
     bool m_GearNeutral;
     bool m_GearReverse;
     quint8 m_Gear;
-    quint16 m_SteerAngle;
+    qint16 m_SteerAngle;
     quint16 m_Speed;
     quint8 m_Brake;
+    quint16 m_Cycle;
 
 
     QString m_str_QMorA;
@@ -174,13 +183,14 @@ signals:
     void SteerAngleChanged();
     void SpeedChanged();
     void BrakeChanged();
-    void QMorAChanged( );
-    void ESTOPChanged( );
-    void GEARChanged( );
-    void SPEEDChanged( );
-    void STEERChanged( );
-    void BRAKEChanged( );
-    void ALIVEChanged( );
+    void QMorAChanged();
+    void ESTOPChanged();
+    void GEARChanged();
+    void SPEEDChanged();
+    void STEERChanged();
+    void BRAKEChanged();
+    void ALIVEChanged();
+    void CycleChanged();
 
     void dataChanged( const QVariant data );
 

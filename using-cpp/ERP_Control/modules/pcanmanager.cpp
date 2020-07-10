@@ -22,6 +22,7 @@ PCanManager::PCanManager(QObject *parent):
     m_SteerAngle(0),
     m_Speed(0),
     m_Brake(0),
+    m_Cycle(20),
     m_str_QMorA("0"),
     m_str_ESTOP("0"),
     m_str_GEAR("0"),
@@ -142,7 +143,7 @@ void PCanManager::setGearReverse(const bool &arg)
     emit GEARChanged();
 }
 
-void PCanManager::setSteerAngle(const quint16 &arg)
+void PCanManager::setSteerAngle(const qint16 &arg)
 {
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
@@ -156,7 +157,7 @@ void PCanManager::setSteerAngle(const quint16 &arg)
 
     emit SteerAngleChanged();
 
-    m_str_STEER = QString::number(arg, 16);
+    m_str_STEER = QString::number(arg*STEER_FACTOR, 16);
     emit STEERChanged();
 }
 void PCanManager::setSpeed(const quint16 &arg)
@@ -167,7 +168,7 @@ void PCanManager::setSpeed(const quint16 &arg)
     //    std::cout << " test" << getData(CanManager::m_TextArea).toStdString() << std::endl;
     emit SpeedChanged();
 
-    m_str_SPEED = QString::number(arg,16);
+    m_str_SPEED = QString::number(arg*SPEED_FACTOR,16);
     emit SPEEDChanged();
 }
 
@@ -184,10 +185,13 @@ void PCanManager::setBrake(const quint8 &arg)
 }
 
 
-//void PCanManager::setQMorA(const QString &arg)
-//{
+void PCanManager::setCycle(const quint16 &arg)
+{
+    if(T)
+        qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
+    m_Cycle = arg;
 
-//}
+}
 
 
 //void PCanManager::sendCmdMessage()
@@ -210,8 +214,8 @@ void PCanManager::run()
         m_pc2erp.MorA = m_AutoEnable;
         m_pc2erp.ESTOP = m_EstopEnable;
         m_pc2erp.GEAR = m_Gear;
-        m_pc2erp.speed._speed = m_Speed * 10;
-        m_pc2erp.steer._steer = m_SteerAngle * 71;
+        m_pc2erp.speed._speed = m_Speed * SPEED_FACTOR;
+        m_pc2erp.steer._steer = m_SteerAngle * STEER_FACTOR;
         m_pc2erp.brake = m_Brake;
         std::cout <<" MorA: "  << +m_pc2erp.MorA
                   <<" ESTOP: " << +m_pc2erp.ESTOP
@@ -225,7 +229,7 @@ void PCanManager::run()
         m_str_ALIVE = QString::number(cnt,16);
         emit ALIVEChanged();
 
-        QThread::msleep(20);
+        msleep(m_Cycle);
 
     }
 

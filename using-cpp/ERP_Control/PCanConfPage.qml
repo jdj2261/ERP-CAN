@@ -42,4 +42,8 @@ PCanConfPageForm {
         pcanManager.Brake = brake
     }
 
+    onCycleChanged: {
+        pcanManager.Cycle = cycle
+    }
+
 }

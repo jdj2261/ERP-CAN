@@ -8,8 +8,8 @@ Page {
     width: 1280
     height: 720
 
-    readonly property int steer_MIN_ANGLE: -28
-    readonly property int steer_MAX_ANGLE: 28
+    readonly property int steer_MIN_ANGLE: -20
+    readonly property int steer_MAX_ANGLE: 20
     readonly property int speed_MIN: 0
     readonly property int speed_MAX: 20
     readonly property int brake_MIN: 0
@@ -33,6 +33,7 @@ Page {
     property alias speed: spinBoxSpeed.value
     property alias brake: spinBoxBrake.value
 
+    property alias cycle: spinBoxCycle.value
 
     //    property alias mode : switchAuto.checked
     header: Label {
@@ -466,16 +467,16 @@ Page {
         }
     }
 
-    TextField {
-        id: textAreaCycle
-        x: 439
+    SpinBox {
+        id: spinBoxCycle
+        x: 447
         y: 25
-        Keys.onEnterPressed: {
-//            text = textAreaCycle.text
-//            textCycle.text = (qsTr(textAreaCycle.text))
-        }
-        width: 90
+        width: 117
         height: 33
+        to: 5000
+        value: 20
+        editable: true
+        stepSize: 10
     }
 
     Text {
@@ -488,3 +489,10 @@ Page {
         font.pixelSize: 12
     }
 }
+
+
+
+/*##^## Designer {
+    D{i:59;anchors_height:33;anchors_width:90;anchors_x:439;anchors_y:25}
+}
+ ##^##*/
