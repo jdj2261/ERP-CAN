@@ -21,7 +21,7 @@ Page {
     property alias estopControl: switchEstop.checked
     property alias steerControl: switchSteerControl.checked
     property alias speedControl: switchSpeedControl.checked
-    property alias ignOvr: checkIgnOvr.checked
+    property alias brakeControl: switchBrakeControl.checked
 
     // GEAR
     property alias gearDrive: rbuttonDrive.checked
@@ -30,8 +30,9 @@ Page {
 
     // Value
     property alias steerAngle: spinBoxSteerAngle.value
-    property alias speed: sliderSpeed.value
-    property alias brake: sliderBrake.value
+    property alias speed: spinBoxSpeed.value
+    property alias brake: spinBoxBrake.value
+
 
     //    property alias mode : switchAuto.checked
     header: Label {
@@ -97,11 +98,11 @@ Page {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            CheckBox {
-                id: checkIgnOvr
+            Switch {
+                id: switchBrakeControl
                 enabled: switchActive.checked
                 checked: switchActive.checked
-                text: qsTr("Ignore")
+                text: qsTr("Brake Control")
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
@@ -158,6 +159,7 @@ Page {
             SpinBox {
                 id: spinBoxSteerAngle
                 editable: true
+                enabled: switchSteerControl.checked
                 stepSize: 1
                 from: steer_MIN_ANGLE
                 to: steer_MAX_ANGLE
@@ -175,6 +177,7 @@ Page {
                 from: steer_MIN_ANGLE
                 to: steer_MAX_ANGLE
                 value: dialSteerAngle.value //steerAngle
+                enabled: switchSteerControl.checked
                 anchors.horizontalCenter: parent.horizontalCenter
                 Text {
                     id: textsteerMin
@@ -209,9 +212,10 @@ Page {
                 id: spinBoxSpeed
                 to: speed_MAX
                 from: speed_MIN
+                enabled: switchSpeedControl.checked
                 editable: true
                 stepSize: 1
-                value: pcanManager.Speed
+                value: sliderSpeed.value
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -219,11 +223,11 @@ Page {
                 id: sliderSpeed
                 to: speed_MAX
                 from: speed_MIN
-
+                enabled: switchSpeedControl.checked
                 anchors.horizontalCenter: parent.horizontalCenter
                 stepSize: 1
                 orientation: Qt.Vertical
-                value: pcanManager.Speed
+                value: sliderSpeed.value
 
                 Text {
                     text: "0"
@@ -260,6 +264,7 @@ Page {
                 to: brake_MAX
                 from: brake_MIN
                 value: sliderBrake.value
+                enabled: switchBrakeControl.checked
                 stepSize: 1
                 anchors.horizontalCenter: parent.horizontalCenter
                 editable: true
@@ -270,9 +275,10 @@ Page {
                 to: brake_MAX
                 from: brake_MIN
                 anchors.horizontalCenter: parent.horizontalCenter
+                enabled: switchBrakeControl.checked
                 stepSize: 1
                 orientation: Qt.Vertical
-                value: pcanManager.Brake
+                value: sliderBrake.value
                 Text {
                     text: "0"
                     anchors.bottom: parent.bottom
@@ -322,12 +328,6 @@ Page {
         height: 100
         spacing: 20
 
-        //        anchors.horizontalCenter: parent.horizontalCenter
-        //            x: 12
-        //            y: 400
-        //            width: 624
-        //            height: 40
-        //        spacing: 42
         Column {
             width: 50
             height: 50
@@ -335,12 +335,13 @@ Page {
 
             Text {
 
-                id: text1
+                id: textMorA
                 width: 50
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("MorA")
             }
             TextArea {
+                id: textAreaMorA
                 width: 50
                 height: 30
                 enabled: switchActive.checked
@@ -353,12 +354,13 @@ Page {
             height: 50
             spacing: 10
             Text {
-                id: text2
+                id: textestop
                 width: 50
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("E-STOP")
             }
             TextArea {
+                id: textAreaestop
                 width: 50
                 height: 30
                 enabled: switchActive.checked
@@ -371,12 +373,13 @@ Page {
             height: 50
             spacing: 10
             Text {
-                id: text3
+                id: textgear
                 width: 50
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("GEAR")
             }
             TextArea {
+                id: textAreagear
                 width: 50
                 height: 30
                 enabled: switchActive.checked
@@ -389,15 +392,16 @@ Page {
             height: 50
             spacing: 10
             Text {
-                id: text4
+                id: textspeed
                 width: 100
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Speed")
             }
             TextArea {
+                id: textAreaspeed
                 width: 100
                 height: 30
-                enabled: switchActive.checked
+                enabled: switchSpeedControl.checked
                 text: qsTr(pcanManager.SPEED)
                 readOnly: true
             }
@@ -408,15 +412,16 @@ Page {
             spacing: 10
 
             Text {
-                id: text5
+                id: textSteer
                 width: 100
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Steer")
             }
             TextArea {
+                id: textAreaSteer
                 width: 100
                 height: 30
-                enabled: switchActive.checked
+                enabled: switchSteerControl.checked
                 text: qsTr(pcanManager.STEER)
                 readOnly: true
             }
@@ -426,15 +431,16 @@ Page {
             height: 50
             spacing: 10
             Text {
-                id: text6
+                id: textBrake
                 width: 100
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Brake")
             }
             TextArea {
+                id: textAreaBrake
                 width: 100
                 height: 30
-                enabled: switchActive.checked
+                enabled: switchBrakeControl.checked
                 text: qsTr(pcanManager.BRAKE)
                 readOnly: true
             }
@@ -444,12 +450,13 @@ Page {
             height: 50
             spacing: 10
             Text {
-                id: text7
+                id: textAlive
                 width: 50
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Alive")
             }
             TextArea {
+                id: textAreaAlive
                 width: 50
                 height: 30
                 enabled: switchActive.checked
@@ -457,5 +464,27 @@ Page {
                 readOnly: true
             }
         }
+    }
+
+    TextField {
+        id: textAreaCycle
+        x: 439
+        y: 25
+        Keys.onEnterPressed: {
+//            text = textAreaCycle.text
+//            textCycle.text = (qsTr(textAreaCycle.text))
+        }
+        width: 90
+        height: 33
+    }
+
+    Text {
+        id: textCycle
+        x: 344
+        y: 31
+        width: 90
+        height: 27
+        text: "Loop Cycle [ms]"
+        font.pixelSize: 12
     }
 }

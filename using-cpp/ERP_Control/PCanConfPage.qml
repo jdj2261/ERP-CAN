@@ -18,8 +18,8 @@ PCanConfPageForm {
     onSpeedControlChanged: {
         pcanManager.SpeedEnable = speedControl
     }
-    onIgnOvrChanged: {
-        pcanManager.OverrideIgnore = ignOvr
+    onBrakeControlChanged: {
+        pcanManager.BrakeEnable = brakeControl
     }
 
     onGearDriveChanged: {
