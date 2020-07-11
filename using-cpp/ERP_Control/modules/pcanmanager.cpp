@@ -1,11 +1,12 @@
 #include "pcanmanager.h"
-
+#include "canmanager.h"
 #define T true
 
 //QString CanManager::m_TextArea;
 //extern QCanBusDevice *send_device;
 //extern QCanBusFrame m_busFrame;
 //QCanBusFrame CanManager::m_busFrame;
+
 
 PCanManager::PCanManager(QObject *parent):
     m_MorA(0x00),
@@ -14,7 +15,7 @@ PCanManager::PCanManager(QObject *parent):
     m_SteerAngle(0),
     m_Speed(0),
     m_Brake(0),
-    m_Cycle(1000),
+    m_Cycle(20),
     m_ActiveEnable(false),
     m_AutoEnable(false),
     m_EstopEnable(false),
@@ -55,14 +56,11 @@ void PCanManager::setAutoEnable(const bool &arg)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
 
     m_AutoEnable = arg;
+    m_MorA = (m_AutoEnable) ? 0x01 : 0x00;
 
-    if(!m_AutoEnable) m_MorA = 0x00;
-    else m_MorA = 0x01;
-//    m_pc2erp.mode.MorA = m_MorA;
-//    std::cout << +m_pc2erp.mode.MorA << std::endl;
+    m_str_QMorA = QString::number(arg,16);
 
     emit AutoEnableChanged();
-    m_str_QMorA = QString::number(arg,16);
     emit str_QMorAChanged();
 }
 
@@ -72,11 +70,10 @@ void PCanManager::setEstopEnable(const bool &arg)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
 
     m_EstopEnable = arg;
-    emit EstopEnableChanged();
-
-    m_Estop = quint8(arg);
-
+    m_Estop = (m_EstopEnable) ? 0x02 : 0x00;
     m_str_ESTOP = QString::number(arg,16);
+
+    emit EstopEnableChanged();
     emit str_ESTOPChanged();
 }
 

@@ -159,4 +159,3 @@ ApplicationWindow {
 //    Component.onDestruction: pcanManager.terminate();
 
 }
-

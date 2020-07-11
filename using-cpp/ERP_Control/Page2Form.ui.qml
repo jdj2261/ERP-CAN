@@ -12,8 +12,11 @@ Page {
         padding: 10
     }
 
-    Label {
-        text: qsTr("You are on Page 2.")
-        anchors.centerIn: parent
+    CircularGauge {
+        id: circularGauge
+        x: 189
+        y: 48
+        width: 223
+        height: 202
     }
 }

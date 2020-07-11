@@ -177,9 +177,7 @@ void CanManager::setFrameData(const QString &frameData)
 
 void CanManager::setCanFrame()
 {
-    qDebug() << "set Can Frame";
-
-
+//    qDebug() << "set Can Frame";
     this->m_write_frame[0] = p_canManager->m_pc2erp.MODE;
     this->m_write_frame[1] = p_canManager->m_pc2erp.speed.speed[1];
     this->m_write_frame[2] = p_canManager->m_pc2erp.speed.speed[0];

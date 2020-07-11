@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 import Qt.labs.calendar 1.0
-import QtQuick.Layouts 1.0
+import QtQuick.Dialogs.qml 1.0
 
 Page {
     id: page
@@ -512,8 +512,15 @@ Page {
         text: "Loop Cycle [ms]"
         font.pixelSize: 12
     }
-}
 
+    Rectangle {
+        id: frame
+        x: 633
+        y: 170
+        width: 570
+        height: 310
+    }
+}
 
 
 
