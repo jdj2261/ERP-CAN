@@ -9,18 +9,22 @@
 QCanBusDevice *CanManager::send_device;
 QCanBusFrame CanManager::m_busFrame;
 QString CanManager::SendButtonID;
+PC2ERP PCanManager::m_pc2erp;
 
 CanManager::CanManager(QObject *parent) : QObject(parent),
-    m_canDevice(nullptr)
+    m_canDevice(nullptr),
+    m_can_packet(PACKET_SIZE)
 {
     send_device = nullptr;
     //init can bus with json or default value
+//    std::cout << "pcanManager" << + p_canManager.m_pc2erp.GEAR << std::endl;
     std::cout << m_canDevice << std::endl;
     std::cout << send_device << std::endl;
+    std::cout << "vector" << +m_can_packet.at(7) << std::endl;
     m_numberFramesWritten = 0;
 //    m_canDevice = nullptr;
-    pluginName = "peakcan";
-    deviceInterfaceName = "usb0";
+    pluginName = PLUGNAME;
+    deviceInterfaceName = InterFaceNAME;
 //    connectDevice();
 }
 

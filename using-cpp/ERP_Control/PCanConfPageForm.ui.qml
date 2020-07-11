@@ -406,6 +406,14 @@ Page {
                 text: qsTr(pcanManager.SPEED)
                 readOnly: true
             }
+            TextArea {
+                id: textAreaspeed1
+                width: 100
+                height: 30
+                enabled: switchSpeedControl.checked
+                text: qsTr(pcanManager.modified_SPEED)
+                readOnly: true
+            }
         }
         Column {
             width: 100
@@ -426,6 +434,14 @@ Page {
                 text: qsTr(pcanManager.STEER)
                 readOnly: true
             }
+            TextArea {
+                id: textAreaSteer1
+                width: 100
+                height: 30
+                text: qsTr(pcanManager.modified_STEER)
+                enabled: switchSteerControl.checked
+                readOnly: true
+            }
         }
         Column {
             width: 100
@@ -441,8 +457,16 @@ Page {
                 id: textAreaBrake
                 width: 100
                 height: 30
-                enabled: switchBrakeControl.checked
                 text: qsTr(pcanManager.BRAKE)
+                enabled: switchBrakeControl.checked
+                readOnly: true
+            }
+            TextArea {
+                id: textAreaBrake1
+                width: 100
+                height: 30
+                text: qsTr(pcanManager.modified_BRAKE)
+                enabled: switchBrakeControl.checked
                 readOnly: true
             }
         }
@@ -489,6 +513,8 @@ Page {
         font.pixelSize: 12
     }
 }
+
+
 
 
 

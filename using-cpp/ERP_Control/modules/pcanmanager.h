@@ -1,9 +1,11 @@
 #ifndef PCanManager_H
 #define PCanManager_H
-#include "canmanager.h"
+//#include "canmanager.h"
 #include <QTimer>
 #include <QThread>
 #include <QDebug>
+#include <iostream>
+#include <string>
 
 #define SPEED_FACTOR 10
 #define STEER_FACTOR 71
@@ -14,7 +16,7 @@ typedef struct _pc_to_erp42
     quint8 ESTOP;
     quint8 GEAR;
     union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ quint8 steer[2]; quint16 _steer;}; union steer steer;
+    union steer{ quint8 steer[2]; qint16 _steer;}; union steer steer;
     quint8 brake = 0;
     quint8 alive = 0;
 
@@ -26,7 +28,7 @@ typedef struct _erp42_to_pc
     quint8 ESTOP = 0x01;
     quint8 GEAR = 0x02;
     union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ quint8 steer[2]; quint16 _steer;}; union steer steer;
+    union steer{ quint8 steer[2]; qint16 _steer;}; union steer steer;
     quint8 brake;
     quint8 alive;
 }ERP2PC;
@@ -40,7 +42,7 @@ public:
     explicit PCanManager(QObject *parent = nullptr);
     virtual ~PCanManager() {}
 
-    CanManager *a;
+//    CanManager *a;
 
     enum Mode{Mannaul = 0x00, Auto = 0x01};
     enum Estop{Off = 0x00, On = 0x02};
@@ -76,13 +78,18 @@ public:
     Q_PROPERTY(quint16 Cycle READ getCycle
                WRITE setCycle NOTIFY CycleChanged)
 
-    Q_PROPERTY(QString QMorA READ getQMorA NOTIFY QMorAChanged)
-    Q_PROPERTY(QString ESTOP READ getESTOP NOTIFY ESTOPChanged)
-    Q_PROPERTY(QString GEAR  READ getGEAR  NOTIFY GEARChanged)
-    Q_PROPERTY(QString SPEED READ getSPEED NOTIFY SPEEDChanged)
-    Q_PROPERTY(QString STEER READ getSTEER NOTIFY STEERChanged)
-    Q_PROPERTY(QString BRAKE READ getBRAKE NOTIFY BRAKEChanged)
-    Q_PROPERTY(QString ALIVE READ getALIVE NOTIFY ALIVEChanged)
+    Q_PROPERTY(QString QMorA READ get_str_QMorA NOTIFY str_QMorAChanged)
+    Q_PROPERTY(QString ESTOP READ get_str_ESTOP NOTIFY str_ESTOPChanged)
+    Q_PROPERTY(QString GEAR  READ get_str_GEAR  NOTIFY str_GEARChanged)
+    Q_PROPERTY(QString SPEED READ get_str_SPEED NOTIFY str_SPEEDChanged)
+    Q_PROPERTY(QString STEER READ get_str_STEER NOTIFY str_STEERChanged)
+    Q_PROPERTY(QString BRAKE READ get_str_BRAKE NOTIFY str_BRAKEChanged)
+    Q_PROPERTY(QString ALIVE READ get_str_ALIVE NOTIFY str_ALIVEChanged)
+
+    Q_PROPERTY(QString modified_SPEED READ get_modified_str_SPEED NOTIFY str_SPEEDChanged)
+    Q_PROPERTY(QString modified_STEER READ get_modified_str_STEER NOTIFY str_STEERChanged)
+    Q_PROPERTY(QString modified_BRAKE READ get_modified_str_BRAKE NOTIFY str_BRAKEChanged)
+
 
     Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
 
@@ -112,30 +119,45 @@ public:
     bool getGearDrive() const {return m_GearDrive;}
     bool getGearNeutral() const {return m_GearNeutral;}
     bool getGearReverse() const {return m_GearReverse;}
-    qint16 getSteerAngle() const {return m_SteerAngle;}
 
+    qint16  getSteerAngle() const {return m_SteerAngle;}
     quint16 getSpeed() const {return m_Speed;}
-    quint8 getBrake() const {return m_Brake;}
-    quint16 getCycle() const {return m_Cycle;}
+    quint8  getBrake() const {return m_Brake;}
+    quint8 getCycle() const {return m_Cycle;}
 
-    QString getQMorA() const {return m_str_QMorA;}
-    QString getESTOP() const {return m_str_ESTOP;}
-    QString getGEAR()  const {return m_str_GEAR;}
-    QString getSPEED() const {return m_str_SPEED;}
-    QString getSTEER() const {return m_str_STEER;}
-    QString getBRAKE() const {return m_str_BRAKE;}
-    QString getALIVE() const {return m_str_ALIVE;}
+    QString get_str_QMorA() const {return m_str_QMorA;}
+    QString get_str_ESTOP() const {return m_str_ESTOP;}
+    QString get_str_GEAR()  const {return m_str_GEAR;}
+    QString get_str_SPEED() const {return m_str_SPEED;}
+    QString get_str_STEER() const {return m_str_STEER;}
+    QString get_str_BRAKE() const {return m_str_BRAKE;}
+    QString get_str_ALIVE() const {return m_str_ALIVE;}
+
+    QString get_modified_str_SPEED() const {return m_modified_str_Speed;}
+    QString get_modified_str_STEER() const {return m_modified_str_SteerAngle;}
+    QString get_modified_str_BRAKE() const {return m_modified_str_Brake;}
 
     QString getData(QString m_getData) const {return m_getData;}
 
-    PC2ERP m_pc2erp;
+    static PC2ERP m_pc2erp;
+
+    PC2ERP showtest() const { return m_pc2erp;}
+
+    quint8 m_Gear;
+    qint16 m_SteerAngle;
+    quint16 m_Speed;
+    quint8 m_Brake;
+    quint8 m_Cycle;
 
 
 //    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}
-    void showData(quint8 data) const
+    QString showData() const
     {
-        std::cout << std::hex << +data << std::endl;
+        std::cout << "PCanManager Object!!" << std::endl;
+//        return m_Cycle;
     }
+
+
 
 private:
     bool m_ActiveEnable;
@@ -147,12 +169,6 @@ private:
     bool m_GearDrive;
     bool m_GearNeutral;
     bool m_GearReverse;
-    quint8 m_Gear;
-    qint16 m_SteerAngle;
-    quint16 m_Speed;
-    quint8 m_Brake;
-    quint16 m_Cycle;
-
 
     QString m_str_QMorA;
     QString m_str_ESTOP;
@@ -161,6 +177,10 @@ private:
     QString m_str_STEER;
     QString m_str_BRAKE;
     QString m_str_ALIVE;
+
+    QString m_modified_str_SteerAngle;
+    QString m_modified_str_Speed;
+    QString m_modified_str_Brake;
 
     const QString m_getData;
 
@@ -183,18 +203,19 @@ signals:
     void SteerAngleChanged();
     void SpeedChanged();
     void BrakeChanged();
-    void QMorAChanged();
-    void ESTOPChanged();
-    void GEARChanged();
-    void SPEEDChanged();
-    void STEERChanged();
-    void BRAKEChanged();
-    void ALIVEChanged();
+
     void CycleChanged();
 
+    void str_QMorAChanged();
+    void str_ESTOPChanged();
+    void str_GEARChanged();
+    void str_SPEEDChanged();
+    void str_STEERChanged();
+    void str_BRAKEChanged();
+    void str_ALIVEChanged();
+
+
     void dataChanged( const QVariant data );
-
-
 
 private slots:
     void setData( const QVariant data ) {
