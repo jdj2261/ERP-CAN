@@ -5,22 +5,21 @@
 #include <QCloseEvent>
 #include <QDesktopServices>
 
-
 QCanBusDevice *CanManager::send_device;
 QCanBusFrame CanManager::m_busFrame;
 QString CanManager::SendButtonID;
 PC2ERP PCanManager::m_pc2erp;
 
 CanManager::CanManager(QObject *parent) : QObject(parent),
-    m_canDevice(nullptr),
-    m_can_packet(PACKET_SIZE)
+    m_canDevice(nullptr)
 {
-    send_device = nullptr;
+    this->send_device = nullptr;
+    this->m_write_frame = new quint8[PACKET_SIZE];
     //init can bus with json or default value
 //    std::cout << "pcanManager" << + p_canManager.m_pc2erp.GEAR << std::endl;
     std::cout << m_canDevice << std::endl;
     std::cout << send_device << std::endl;
-    std::cout << "vector" << +m_can_packet.at(7) << std::endl;
+//    std::cout << "vector" << +m_can_packet.at(7) << std::endl;
     m_numberFramesWritten = 0;
 //    m_canDevice = nullptr;
     pluginName = PLUGNAME;
@@ -111,8 +110,6 @@ void CanManager::processReceivedFrames()
         else
             view = frame.toString().simplified();
 
-
-
         const QString time = QString::fromLatin1("%1.%2  ")
                 .arg(frame.timeStamp().seconds(), 10, 10, QLatin1Char(' '))
                 .arg(frame.timeStamp().microSeconds() / 100, 4, 10, QLatin1Char('0'));
@@ -127,7 +124,8 @@ void CanManager::processReceivedFrames()
 
         m_TextArea = view;
 
-        buttontest();
+//        buttontest();
+        setCanFrame();
         emit TextAreaChanged();
 
         QThread::usleep(1000);
@@ -177,6 +175,35 @@ void CanManager::setFrameData(const QString &frameData)
     emit frameDataChanged(m_FrameData);
 }
 
+void CanManager::setCanFrame()
+{
+    qDebug() << "set Can Frame";
+
+
+    this->m_write_frame[0] = p_canManager->m_pc2erp.MODE;
+    this->m_write_frame[1] = p_canManager->m_pc2erp.speed.speed[1];
+    this->m_write_frame[2] = p_canManager->m_pc2erp.speed.speed[0];
+    this->m_write_frame[3] = p_canManager->m_pc2erp.steer.steer[1];
+    this->m_write_frame[4] = p_canManager->m_pc2erp.steer.steer[0];
+    this->m_write_frame[5] = p_canManager->m_pc2erp.brake;
+    this->m_write_frame[7] = p_canManager->m_pc2erp.alive;
+
+    for (int i = 0; i< PACKET_SIZE; i++)
+    {
+        cout << hex <<+this->m_write_frame[i] << " ";
+    }
+    cout << endl;
+
+}
+
+void CanManager::writeCanFrame()
+{
+
+//    qDebug() <<
+
+}
+
+
 void CanManager::buttontest()
 {
     qDebug()<<m_FrameID<<m_FrameData;
@@ -193,10 +220,9 @@ void CanManager::buttontest()
     QString str = "";
     str.append(payload);
 
-//    std::cout << std::hex << num << std::endl;
-//    std::cout << ba_as_hex_string.toStdString() << std::endl;
-
     m_busFrame = QCanBusFrame(frameId, payload);
+
+//    setCanFrame();
 
     if (!send_device)
     {

@@ -16,15 +16,17 @@ const int8_t PACKET_SIZE = 8;
 const QString PLUGNAME = "peakcan";
 const QString InterFaceNAME = "usb0";
 
+using namespace std;
+
 class CanManager : public QObject
 {
     Q_OBJECT
 
 public:
     explicit CanManager(QObject *parent = nullptr);
-    virtual ~CanManager() {}
+    virtual ~CanManager() {delete []m_write_frame;}
 
-    PCanManager p_canManager;
+    PCanManager *p_canManager;
 
     Q_PROPERTY(QString TextArea  READ getTextArea WRITE setTextArea NOTIFY TextAreaChanged)
     Q_PROPERTY(QString frameID   READ getframeID WRITE setFrameID NOTIFY frameIDChanged)
@@ -47,6 +49,8 @@ public:
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
     void sendRawFrame(QCanBusFrame &frame) const;
+    void setCanFrame();
+    void writeCanFrame();
 
     /* static */
     QString m_TextArea;
@@ -77,8 +81,10 @@ private:
 
     const QCanBusFrame m_Frame;
 
-    std::vector<quint8> m_can_packet;
+    quint8* m_write_frame;
 
+//    std::vector<quint8> m_can_packet;
+//    std::vector<quint8> get_packet() const {return m_can_packet;}
 
 
     //Thread

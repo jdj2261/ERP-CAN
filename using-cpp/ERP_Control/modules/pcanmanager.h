@@ -7,11 +7,12 @@
 #include <iostream>
 #include <string>
 
-#define SPEED_FACTOR 10
-#define STEER_FACTOR 71
+const quint8 SPEED_FACTOR=10;
+const quint8 STEER_FACTOR=71;
 
 typedef struct _pc_to_erp42
 {
+    quint8 MODE;
     quint8 MorA;
     quint8 ESTOP;
     quint8 GEAR;
@@ -123,7 +124,7 @@ public:
     qint16  getSteerAngle() const {return m_SteerAngle;}
     quint16 getSpeed() const {return m_Speed;}
     quint8  getBrake() const {return m_Brake;}
-    quint8 getCycle() const {return m_Cycle;}
+    quint16 getCycle() const {return m_Cycle;}
 
     QString get_str_QMorA() const {return m_str_QMorA;}
     QString get_str_ESTOP() const {return m_str_ESTOP;}
@@ -143,11 +144,13 @@ public:
 
     PC2ERP showtest() const { return m_pc2erp;}
 
+    quint8 m_MorA;
+    quint8 m_Estop;
     quint8 m_Gear;
     qint16 m_SteerAngle;
     quint16 m_Speed;
     quint8 m_Brake;
-    quint8 m_Cycle;
+    quint16 m_Cycle;
 
 
 //    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}

@@ -8,6 +8,12 @@
 //QCanBusFrame CanManager::m_busFrame;
 
 PCanManager::PCanManager(QObject *parent):
+    m_MorA(0x00),
+    m_Estop(0x00),
+    m_Gear(N),
+    m_SteerAngle(0),
+    m_Speed(0),
+    m_Brake(0),
     m_Cycle(1000),
     m_ActiveEnable(false),
     m_AutoEnable(false),
@@ -18,10 +24,6 @@ PCanManager::PCanManager(QObject *parent):
     m_GearDrive(false),
     m_GearNeutral(false),
     m_GearReverse(false),
-    m_Gear(N),
-    m_SteerAngle(0),
-    m_Speed(0),
-    m_Brake(0),
     m_str_QMorA("0"),
     m_str_ESTOP("0"),
     m_str_GEAR("0"),
@@ -53,8 +55,13 @@ void PCanManager::setAutoEnable(const bool &arg)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
 
     m_AutoEnable = arg;
-    emit AutoEnableChanged();
 
+    if(!m_AutoEnable) m_MorA = 0x00;
+    else m_MorA = 0x01;
+//    m_pc2erp.mode.MorA = m_MorA;
+//    std::cout << +m_pc2erp.mode.MorA << std::endl;
+
+    emit AutoEnableChanged();
     m_str_QMorA = QString::number(arg,16);
     emit str_QMorAChanged();
 }
@@ -67,6 +74,8 @@ void PCanManager::setEstopEnable(const bool &arg)
     m_EstopEnable = arg;
     emit EstopEnableChanged();
 
+    m_Estop = quint8(arg);
+
     m_str_ESTOP = QString::number(arg,16);
     emit str_ESTOPChanged();
 }
@@ -75,8 +84,8 @@ void PCanManager::setSteerEnable(const bool &arg)
 {
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
-        m_SteerEnable = arg;
-        emit SteerEnableChanged();
+    m_SteerEnable = arg;
+    emit SteerEnableChanged();
 
 }
 
@@ -84,8 +93,8 @@ void PCanManager::setSpeedEnable(const bool &arg)
 {
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
-        m_SpeedEnable = arg;
-        emit SpeedEnableChanged();
+    m_SpeedEnable = arg;
+    emit SpeedEnableChanged();
 
 }
 
@@ -150,7 +159,6 @@ void PCanManager::setSteerAngle(const qint16 &arg)
 //    std::cout << " test 3 : " << m_SteerAngle << std::endl;
 
     m_SteerAngle = arg;
-    setData(m_SteerAngle);
     emit SteerAngleChanged();
 
     m_str_STEER = QString::number((arg*STEER_FACTOR) & 0xffff, 16);
@@ -210,9 +218,11 @@ void PCanManager::run()
     {
         alive_cnt++;
 
-        m_pc2erp.MorA = m_AutoEnable;
-        m_pc2erp.ESTOP = m_EstopEnable;
+        m_pc2erp.MorA = m_MorA;
+        m_pc2erp.ESTOP = m_Estop;
         m_pc2erp.GEAR = m_Gear;
+        m_pc2erp.MODE = m_MorA + m_Estop + m_Gear;
+
         m_pc2erp.speed._speed = m_Speed * SPEED_FACTOR;
         m_pc2erp.steer._steer = (m_SteerAngle * STEER_FACTOR) ;
 
@@ -220,19 +230,22 @@ void PCanManager::run()
         m_pc2erp.steer.steer[1] = (m_pc2erp.steer._steer & 0xff00) >> 8;
 
         m_pc2erp.brake = m_Brake;
-        std::cout <<" MorA: "  << +m_pc2erp.MorA
-                  <<" ESTOP: " << +m_pc2erp.ESTOP
-                  <<" GEAR: "  << +m_pc2erp.GEAR
-                  <<" speed: " << m_pc2erp.speed._speed
-                  <<" steer: " << m_pc2erp.steer._steer
-                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
-                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
-                  <<" brake: " << +m_pc2erp.brake
-                  <<" alive: " << +alive_cnt
-                  << std::endl;
+        m_pc2erp.alive = alive_cnt;
+//        std::cout <<" MODE: "  << +m_pc2erp.MODE
+//                  <<" MorA: "  << +m_pc2erp.MorA
+//                  <<" ESTOP: " << +m_pc2erp.ESTOP
+//                  <<" GEAR: "  << +m_pc2erp.GEAR
+//                  <<" speed: " << m_pc2erp.speed._speed
+//                  <<" steer: " << m_pc2erp.steer._steer
+//                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
+//                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
+//                  <<" brake: " << +m_pc2erp.brake
+//                  <<" alive: " << +alive_cnt
+//                  << std::endl;
 
         m_str_ALIVE = QString::number(alive_cnt,16);
         emit str_ALIVEChanged();
+        setData(m_pc2erp.MODE);
 
         msleep(m_Cycle);
 
