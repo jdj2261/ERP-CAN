@@ -6,5 +6,7 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>PCanConfPage.qml</file>
+        <file>images/handle.png</file>
+        <file>images/erp42.png</file>
     </qresource>
 </RCC>

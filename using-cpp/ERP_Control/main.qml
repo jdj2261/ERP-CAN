@@ -10,6 +10,7 @@ ApplicationWindow {
     height: 720
     title: qsTr("UNMANNED ERP42 CONTROL")
 
+
     PCanManager {
         id: pcan
     }
@@ -28,21 +29,21 @@ ApplicationWindow {
         PCanConfPage {
         }
 
-        Page2Form {
-        }
+//        Page2Form {
+//        }
     }
 
-//    ComboBox {
-//        id: comboBox1
-//        x: 660
-//        y: 54
-//        model: comboModel.comboList
-//        onActivated: {
-//            console.log("combomodel activated" + comboBox1.currentIndex)
-//            comboModel.currentIndex = comboBox1.currentIndex
-//         }
+    //    ComboBox {
+    //        id: comboBox1
+    //        x: 660
+    //        y: 54
+    //        model: comboModel.comboList
+    //        onActivated: {
+    //            console.log("combomodel activated" + comboBox1.currentIndex)
+    //            comboModel.currentIndex = comboBox1.currentIndex
+    //         }
 
-//    }
+    //    }
 
 
     Text {
@@ -55,6 +56,30 @@ ApplicationWindow {
         text: "Frame ID"
 
 
+    }
+
+//    x: 22
+//    y: 200
+//    width: 605
+//    height: 280
+
+//    Column {
+//        id: columnSteerAngle
+//        width: 200
+//        height: 280
+//        spacing: 10
+
+    Image {
+        id: name
+        x: 0
+        y: 300
+        width: 250
+        height: 250
+        source: "../images/handle.png"
+        antialiasing: true
+        anchors.centerIn: parent.Center
+//        //                    source: "needle.png"
+        transform: Rotation { origin.x: 125; origin.y: 125; angle: pcanManager.SteerAngle}
     }
 
     TextField {
@@ -114,14 +139,14 @@ ApplicationWindow {
         }
     }
 
-//    Button {
-//        id: button
-//        x: 1110
-//        y: 552
-//        width: 143
-//        height: 63
-//        text: qsTr("Button")
-//    }
+    //    Button {
+    //        id: button
+    //        x: 1110
+    //        y: 552
+    //        width: 143
+    //        height: 63
+    //        text: qsTr("Button")
+    //    }
 
 
     TextField {
@@ -146,9 +171,9 @@ ApplicationWindow {
 
     Connections {
         target: pcanManager
-//        onStarted: {
-//            print('worker thread started')
-//        }
+        //        onStarted: {
+        //            print('worker thread started')
+        //        }
 
         onDataChanged: {
             print('data changed to: ' + pcanManager.getData() );
@@ -156,6 +181,6 @@ ApplicationWindow {
         }
     }
 
-//    Component.onDestruction: pcanManager.terminate();
+    //    Component.onDestruction: pcanManager.terminate();
 
 }

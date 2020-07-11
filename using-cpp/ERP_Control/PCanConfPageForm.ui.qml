@@ -8,8 +8,8 @@ Page {
     width: 1280
     height: 720
 
-    readonly property int steer_MIN_ANGLE: -20
-    readonly property int steer_MAX_ANGLE: 20
+    readonly property int steer_MIN_ANGLE: -28
+    readonly property int steer_MAX_ANGLE: 28
     readonly property int speed_MIN: 0
     readonly property int speed_MAX: 20
     readonly property int brake_MIN: 0
@@ -44,13 +44,13 @@ Page {
 
     Switch {
         id: switchActive
-        x: 20
+        x: 28
         y: 6
         text: qsTr("Active")
     }
 
     Column {
-        x: 20
+        x: 28
         y: 46
         width: 550
         height: 100
@@ -140,7 +140,7 @@ Page {
     }
 
     Row {
-        x: 22
+        x: 28
         y: 200
         width: 605
         height: 280
@@ -172,6 +172,7 @@ Page {
                 id: dialSteerAngle
                 width: 200
                 height: 200
+                visible: true
                 inputMode: Dial.Circular
                 stepSize: 1
                 wheelEnabled: true
@@ -180,6 +181,7 @@ Page {
                 value: dialSteerAngle.value //steerAngle
                 enabled: switchSteerControl.checked
                 anchors.horizontalCenter: parent.horizontalCenter
+
                 Text {
                     id: textsteerMin
                     text: "-28"
@@ -323,7 +325,7 @@ Page {
 
     Row {
         id: row5
-        x: 22
+        x: 28
         y: 517
         width: 800
         height: 100
@@ -520,12 +522,21 @@ Page {
         width: 570
         height: 310
     }
+
+    Image {
+        id: name
+        x: 1042
+        y: 444
+        width: 200
+        height: 200
+        source: "../images/erp42.png"
+    }
 }
 
 
 
 
 /*##^## Designer {
-    D{i:59;anchors_height:33;anchors_width:90;anchors_x:439;anchors_y:25}
+    D{i:58;anchors_height:33;anchors_width:90;anchors_x:439;anchors_y:25}
 }
  ##^##*/
