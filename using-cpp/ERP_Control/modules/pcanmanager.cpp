@@ -58,7 +58,7 @@ void PCanManager::setAutoEnable(const bool &arg)
     m_AutoEnable = arg;
     m_MorA = (m_AutoEnable) ? 0x01 : 0x00;
 
-    m_str_QMorA = QString::number(arg,16);
+    m_str_QMorA = QString::number(m_MorA, 16);
 
     emit AutoEnableChanged();
     emit str_QMorAChanged();
@@ -71,7 +71,7 @@ void PCanManager::setEstopEnable(const bool &arg)
 
     m_EstopEnable = arg;
     m_Estop = (m_EstopEnable) ? 0x02 : 0x00;
-    m_str_ESTOP = QString::number(arg,16);
+    m_str_ESTOP = QString::number(m_Estop, 16);
 
     emit EstopEnableChanged();
     emit str_ESTOPChanged();
@@ -114,7 +114,7 @@ void PCanManager::setGearDrive(const bool &arg)
 //    m_GearDrive = arg;
     emit GearDriveChanged();
 
-    m_str_GEAR = QString::number(D,16);
+    m_str_GEAR = QString::number(D, 16);
     m_Gear = D;
     emit str_GEARChanged();
 }
@@ -128,7 +128,7 @@ void PCanManager::setGearNeutral(const bool &arg)
         m_GearNeutral = arg;
         emit GearNeutralChanged();
     }
-    m_str_GEAR = QString::number(N,16);
+    m_str_GEAR = QString::number(N, 16);
     m_Gear = N;
     emit str_GEARChanged();
 }
@@ -142,7 +142,7 @@ void PCanManager::setGearReverse(const bool &arg)
         m_GearReverse = arg;
         emit GearReverseChanged();
     }
-    m_str_GEAR = QString::number(R,16);
+    m_str_GEAR = QString::number(R, 16);
     m_Gear = R;
     emit str_GEARChanged();
 }
@@ -228,26 +228,24 @@ void PCanManager::run()
 
         m_pc2erp.brake = m_Brake;
         m_pc2erp.alive = alive_cnt;
-//        std::cout <<" MODE: "  << +m_pc2erp.MODE
-//                  <<" MorA: "  << +m_pc2erp.MorA
-//                  <<" ESTOP: " << +m_pc2erp.ESTOP
-//                  <<" GEAR: "  << +m_pc2erp.GEAR
-//                  <<" speed: " << m_pc2erp.speed._speed
-//                  <<" steer: " << m_pc2erp.steer._steer
-//                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
-//                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
-//                  <<" brake: " << +m_pc2erp.brake
-//                  <<" alive: " << +alive_cnt
-//                  << std::endl;
+        std::cout <<" MODE: "  << +m_pc2erp.MODE
+                  <<" MorA: "  << +m_pc2erp.MorA
+                  <<" ESTOP: " << +m_pc2erp.ESTOP
+                  <<" GEAR: "  << +m_pc2erp.GEAR
+                  <<" speed: " << m_pc2erp.speed._speed
+                  <<" steer: " << m_pc2erp.steer._steer
+                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
+                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
+                  <<" brake: " << +m_pc2erp.brake
+                  <<" alive: " << +alive_cnt
+                  << std::endl;
 
         m_str_ALIVE = QString::number(alive_cnt,16);
         emit str_ALIVEChanged();
         setData(m_pc2erp.MODE);
 
         msleep(m_Cycle);
-
     }
-
 }
 
 

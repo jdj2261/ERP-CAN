@@ -517,18 +517,382 @@ Page {
 
     Rectangle {
         id: frame
-        x: 633
-        y: 170
-        width: 570
-        height: 310
+        x: 630
+        y: 200
+        width: 635
+        height: 280
+        border.color: "black"
+
+        Row {
+            id: row51
+            x: 8
+            y: 62
+            width: 627
+            height: 102
+            spacing: 20
+
+            Column {
+                width: 50
+                height: 50
+                spacing: 10
+
+                Text {
+
+                    id: textMorA1
+                    width: 50
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("MorA")
+                }
+                TextArea {
+                    id: textAreaMorA1
+                    width: 50
+                    height: 30
+                    enabled: switchActive.checked
+                    text: qsTr(pcanManager.QMorA)
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 50
+                height: 50
+                spacing: 10
+                Text {
+                    id: textestop1
+                    width: 50
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("E-STOP")
+                }
+                TextArea {
+                    id: textAreaestop1
+                    width: 50
+                    height: 30
+                    enabled: switchActive.checked
+                    text: qsTr(pcanManager.ESTOP)
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 50
+                height: 50
+                spacing: 10
+                Text {
+                    id: textgear1
+                    width: 50
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("GEAR")
+                }
+                TextArea {
+                    id: textAreagear1
+                    width: 50
+                    height: 30
+                    enabled: switchActive.checked
+                    text: qsTr(pcanManager.GEAR)
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 100
+                height: 50
+                spacing: 10
+                Text {
+                    id: textspeed1
+                    width: 100
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("Speed")
+                }
+                TextArea {
+                    id: textAreaspeed123
+                    width: 100
+                    height: 30
+                    enabled: switchSpeedControl.checked
+                    text: qsTr(pcanManager.SPEED)
+                    readOnly: true
+                }
+                TextArea {
+                    id: textAreaspeed12
+                    width: 100
+                    height: 30
+                    enabled: switchSpeedControl.checked
+                    text: qsTr(pcanManager.modified_SPEED)
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 100
+                height: 50
+                spacing: 10
+
+                Text {
+                    id: textSteer1
+                    width: 100
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("Steer")
+                }
+                TextArea {
+                    id: textAreaSteer13
+                    width: 100
+                    height: 30
+                    enabled: switchSteerControl.checked
+                    text: qsTr(pcanManager.STEER)
+                    readOnly: true
+                }
+                TextArea {
+                    id: textAreaSteer12
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.modified_STEER)
+                    enabled: switchSteerControl.checked
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 100
+                height: 50
+                spacing: 10
+                Text {
+                    id: textBrake123
+                    width: 100
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("Brake")
+                }
+                TextArea {
+                    id: textAreaBrake12
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.BRAKE)
+                    enabled: switchBrakeControl.checked
+                    readOnly: true
+                }
+                TextArea {
+                    id: textAreaBrake13
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.modified_BRAKE)
+                    enabled: switchBrakeControl.checked
+                    readOnly: true
+                }
+            }
+            Column {
+                width: 50
+                height: 50
+                spacing: 10
+                Text {
+                    id: textAlive12
+                    width: 50
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("Alive")
+                }
+                TextArea {
+                    id: textAreaAlive123
+                    width: 50
+                    height: 30
+                    enabled: switchActive.checked
+                    text: qsTr(pcanManager.ALIVE)
+                    readOnly: true
+                }
+            }
+        }
+
+        Text {
+            id: element
+            x: 279
+            y: 8
+            width: 86
+            height: 26
+            text: qsTr("Feedback")
+            font.italic: true
+            font.pixelSize: 21
+        }
+
+        Row {
+            id: row52
+            x: 8
+            y: 170
+            width: 627
+            height: 102
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textMorA2
+                    width: 50
+                    text: qsTr("MorA")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaMorA2
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.QMorA)
+                    readOnly: true
+                    enabled: switchActive.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textestop2
+                    width: 50
+                    text: qsTr("E-STOP")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaestop2
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.ESTOP)
+                    readOnly: true
+                    enabled: switchActive.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textgear2
+                    width: 50
+                    text: qsTr("GEAR")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreagear2
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.GEAR)
+                    readOnly: true
+                    enabled: switchActive.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 100
+                height: 50
+                Text {
+                    id: textspeed2
+                    width: 100
+                    text: qsTr("Speed")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaspeed124
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.SPEED)
+                    readOnly: true
+                    enabled: switchSpeedControl.checked
+                }
+
+                TextArea {
+                    id: textAreaspeed13
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.modified_SPEED)
+                    readOnly: true
+                    enabled: switchSpeedControl.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 100
+                height: 50
+                Text {
+                    id: textSteer2
+                    width: 100
+                    text: qsTr("Steer")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaSteer14
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.STEER)
+                    readOnly: true
+                    enabled: switchSteerControl.checked
+                }
+
+                TextArea {
+                    id: textAreaSteer15
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.modified_STEER)
+                    readOnly: true
+                    enabled: switchSteerControl.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 100
+                height: 50
+                Text {
+                    id: textBrake124
+                    width: 100
+                    text: qsTr("Brake")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaBrake14
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.BRAKE)
+                    readOnly: true
+                    enabled: switchBrakeControl.checked
+                }
+
+                TextArea {
+                    id: textAreaBrake15
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.modified_BRAKE)
+                    readOnly: true
+                    enabled: switchBrakeControl.checked
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textAlive13
+                    width: 50
+                    text: qsTr("Alive")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaAlive124
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.ALIVE)
+                    readOnly: true
+                    enabled: switchActive.checked
+                }
+                spacing: 10
+            }
+            spacing: 20
+        }
     }
 
     Image {
         id: name
-        x: 1042
-        y: 444
-        width: 200
-        height: 200
+        x: 1032
+        y: 479
+        width: 171
+        height: 144
         source: "../images/erp42.png"
     }
 }
@@ -537,6 +901,6 @@ Page {
 
 
 /*##^## Designer {
-    D{i:58;anchors_height:33;anchors_width:90;anchors_x:439;anchors_y:25}
+    D{i:58;anchors_height:33;anchors_width:90;anchors_x:439;anchors_y:25}D{i:90;anchors_x:306;anchors_y:8}
 }
  ##^##*/
