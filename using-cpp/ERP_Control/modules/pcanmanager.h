@@ -9,8 +9,6 @@
 
 const quint8 SPEED_FACTOR=10;
 const quint8 STEER_FACTOR=71;
-const uint ERPID1 = 0x778;
-const uint ERPID2 = 0x778;
 
 typedef struct _pc_to_erp42
 {
@@ -25,16 +23,27 @@ typedef struct _pc_to_erp42
 
 }PC2ERP;
 
-typedef struct _erp42_to_pc
+typedef struct _erp42_to_pc_1
 {
-    quint8 MorA = 0x00;
-    quint8 ESTOP = 0x01;
-    quint8 GEAR = 0x02;
+    quint8 MODE;
+    quint8 MorA;
+    quint8 ESTOP;
+    quint8 GEAR;
     union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
     union steer{ quint8 steer[2]; qint16 _steer;}; union steer steer;
-    quint8 brake;
-    quint8 alive;
-}ERP2PC;
+    quint8 brake = 0;
+    quint8 alive = 0;
+}ERP2PC_1;
+
+typedef struct _erp42_to_pc_2
+{
+    qint32 Encoder[4];
+    quint8 Brake_Cmd_Raw;
+    quint8 Brake_Raw;
+    quint8 Brake_Echo;
+    quint8 Brake_Init_Max;
+}ERP2PC_2;
+
 
 class PCanManager : public QThread
 {
@@ -50,11 +59,18 @@ public:
     enum Mode{Mannaul = 0x00, Auto = 0x01};
     enum Estop{Off = 0x00, On = 0x02};
     enum Gear{D = 0x00, N = 0x04, R = 0x08};
+    enum CANID
+    {
+        ERP_ID_1 = 0x778,
+        ERP_ID_2 = 0x779,
+        TEST_ID  = 0x2B0
+    };
 
     Q_ENUM(Mode)
     Q_ENUM(Estop)
     Q_ENUM(Gear)
 
+    /* Set UI */
     Q_PROPERTY(bool Active READ getActive WRITE setActive NOTIFY ActiveChanged)
     Q_PROPERTY(bool AutoEnable READ getAutoEnable
                WRITE setAutoEnable NOTIFY AutoEnableChanged)
@@ -81,19 +97,36 @@ public:
     Q_PROPERTY(quint16 Cycle READ getCycle
                WRITE setCycle NOTIFY CycleChanged)
 
-    Q_PROPERTY(QString QMorA READ get_str_QMorA NOTIFY str_QMorAChanged)
-    Q_PROPERTY(QString ESTOP READ get_str_ESTOP NOTIFY str_ESTOPChanged)
-    Q_PROPERTY(QString GEAR  READ get_str_GEAR  NOTIFY str_GEARChanged)
-    Q_PROPERTY(QString SPEED READ get_str_SPEED NOTIFY str_SPEEDChanged)
-    Q_PROPERTY(QString STEER READ get_str_STEER NOTIFY str_STEERChanged)
-    Q_PROPERTY(QString BRAKE READ get_str_BRAKE NOTIFY str_BRAKEChanged)
-    Q_PROPERTY(QString ALIVE READ get_str_ALIVE NOTIFY str_ALIVEChanged)
+    /* PC to ERP */
+    Q_PROPERTY(QString get_QMorA READ get_str_QMorA NOTIFY get_str_QMorAChanged)
+    Q_PROPERTY(QString get_ESTOP READ get_str_ESTOP NOTIFY get_str_ESTOPChanged)
+    Q_PROPERTY(QString get_GEAR  READ get_str_GEAR  NOTIFY get_str_GEARChanged)
+    Q_PROPERTY(QString get_SPEED READ get_str_SPEED NOTIFY get_str_SPEEDChanged)
+    Q_PROPERTY(QString get_STEER READ get_str_STEER NOTIFY get_str_STEERChanged)
+    Q_PROPERTY(QString get_BRAKE READ get_str_BRAKE NOTIFY get_str_BRAKEChanged)
+    Q_PROPERTY(QString get_ALIVE READ get_str_ALIVE NOTIFY get_str_ALIVEChanged)
 
-    Q_PROPERTY(QString modified_SPEED READ get_modified_str_SPEED NOTIFY str_SPEEDChanged)
-    Q_PROPERTY(QString modified_STEER READ get_modified_str_STEER NOTIFY str_STEERChanged)
-    Q_PROPERTY(QString modified_BRAKE READ get_modified_str_BRAKE NOTIFY str_BRAKEChanged)
+    Q_PROPERTY(QString get_modified_SPEED READ get_modified_str_SPEED NOTIFY get_str_SPEEDChanged)
+    Q_PROPERTY(QString get_modified_STEER READ get_modified_str_STEER NOTIFY get_str_STEERChanged)
+    Q_PROPERTY(QString get_modified_BRAKE READ get_modified_str_BRAKE NOTIFY get_str_BRAKEChanged)
 
+    /* ERP to PC */
+    Q_PROPERTY(QString set_QMorA READ set_str_QMorA NOTIFY set_str_QMorAChanged)
+    Q_PROPERTY(QString set_ESTOP READ set_str_ESTOP NOTIFY set_str_ESTOPChanged)
+    Q_PROPERTY(QString set_GEAR  READ set_str_GEAR  NOTIFY set_str_GEARChanged)
+    Q_PROPERTY(QString set_SPEED READ set_str_SPEED NOTIFY set_str_SPEEDChanged)
+    Q_PROPERTY(QString set_STEER READ set_str_STEER NOTIFY set_str_STEERChanged)
+    Q_PROPERTY(QString set_BRAKE READ set_str_BRAKE NOTIFY set_str_BRAKEChanged)
+    Q_PROPERTY(QString set_ALIVE READ set_str_ALIVE NOTIFY set_str_ALIVEChanged)
 
+    Q_PROPERTY(QString set_modified_SPEED READ set_modified_str_SPEED NOTIFY set_str_SPEEDChanged)
+    Q_PROPERTY(QString set_modified_STEER READ set_modified_str_STEER NOTIFY set_str_STEERChanged)
+    Q_PROPERTY(QString set_modified_BRAKE READ set_modified_str_BRAKE NOTIFY set_str_BRAKEChanged)
+
+    Q_PROPERTY(QString set_ID1 READ set_str_ID1 NOTIFY set_str_ID1Changed)
+    Q_PROPERTY(QString set_ID2 READ set_str_ID2 NOTIFY set_str_ID2Changed)
+
+    /* TEST */
     Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
 
     Q_INVOKABLE void setActive(const bool &);
@@ -140,6 +173,21 @@ public:
     QString get_modified_str_STEER() const {return m_modified_str_SteerAngle;}
     QString get_modified_str_BRAKE() const {return m_modified_str_Brake;}
 
+    QString set_str_QMorA() const {return m_FB_str_QMorA;}
+    QString set_str_ESTOP() const {return m_FB_str_ESTOP;}
+    QString set_str_GEAR()  const {return m_FB_str_GEAR;}
+    QString set_str_SPEED() const {return m_FB_str_SPEED;}
+    QString set_str_STEER() const {return m_FB_str_STEER;}
+    QString set_str_BRAKE() const {return m_FB_str_BRAKE;}
+    QString set_str_ALIVE() const {return m_FB_str_ALIVE;}
+
+    QString set_modified_str_SPEED() const {return m_FB_modified_str_Speed;}
+    QString set_modified_str_STEER() const {return m_FB_modified_str_SteerAngle;}
+    QString set_modified_str_BRAKE() const {return m_FB_modified_str_Brake;}
+
+    QString set_str_ID1() const {return m_str_ID1;}
+    QString set_str_ID2() const {return m_str_ID2;}
+
     QString getData(QString m_getData) const {return m_getData;}
 
     static PC2ERP m_pc2erp;
@@ -152,23 +200,13 @@ public:
     quint8 m_Brake;
     quint16 m_Cycle;
 
-
-//    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}
-    void showData(PC2ERP m_pc2erp)
-    {
-        std::cout <<" MODE: "  << +m_pc2erp.MODE
-                  <<" MorA: "  << +m_pc2erp.MorA
-                  <<" ESTOP: " << +m_pc2erp.ESTOP
-                  <<" GEAR: "  << +m_pc2erp.GEAR
-                  <<" speed: " << m_pc2erp.speed._speed
-                  <<" steer: " << m_pc2erp.steer._steer
-                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
-                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
-                  <<" brake: " << +m_pc2erp.brake
-                  <<" alive: " << +m_pc2erp.alive
-                  << std::endl;
-    }
-
+    quint8  m_FB_MorA;
+    quint8  m_FB_Estop;
+    quint8  m_FB_Gear;
+    qint16  m_FB_SteerAngle;
+    quint16 m_FB_Speed;
+    quint8  m_FB_Brake;
+    quint16 m_FB_Cycle;
 
 
 private:
@@ -194,17 +232,54 @@ private:
     QString m_modified_str_Speed;
     QString m_modified_str_Brake;
 
+    QString m_FB_str_QMorA;
+    QString m_FB_str_ESTOP;
+    QString m_FB_str_GEAR;
+    QString m_FB_str_SPEED;
+    QString m_FB_str_STEER;
+    QString m_FB_str_BRAKE;
+    QString m_FB_str_ALIVE;
+
+    QString m_str_ID1;
+    QString m_str_ID2;
+
+    QString m_FB_modified_str_SteerAngle;
+    QString m_FB_modified_str_Speed;
+    QString m_FB_modified_str_Brake;
+
+
     const QString m_getData;
 
 //    quint16 m_getSteerData;
 
     QVariant data_{ "" };
-    ERP2PC m_erp2pc;
+    ERP2PC_1 m_erp2pc_1;
+    ERP2PC_2 m_erp2pc_2;
 
     /* Thread */
     void run();
 
+    //    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}
+
+    void showData(PC2ERP m_pc2erp)
+    {
+        std::cout <<" MODE: "  << +m_pc2erp.MODE
+                  <<" MorA: "  << +m_pc2erp.MorA
+                  <<" ESTOP: " << +m_pc2erp.ESTOP
+                  <<" GEAR: "  << +m_pc2erp.GEAR
+                  <<" speed: " << m_pc2erp.speed._speed
+                  <<" steer: " << m_pc2erp.steer._steer
+                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
+                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
+                  <<" brake: " << +m_pc2erp.brake
+                  <<" alive: " << +m_pc2erp.alive
+                  << std::endl;
+    }
+
     void getFeedback();
+    void setFeedback1();
+    void setFeedback2();
+
 
 signals:
     void ActiveChanged();
@@ -222,13 +297,24 @@ signals:
 
     void CycleChanged();
 
-    void str_QMorAChanged();
-    void str_ESTOPChanged();
-    void str_GEARChanged();
-    void str_SPEEDChanged();
-    void str_STEERChanged();
-    void str_BRAKEChanged();
-    void str_ALIVEChanged();
+    void get_str_QMorAChanged();
+    void get_str_ESTOPChanged();
+    void get_str_GEARChanged();
+    void get_str_SPEEDChanged();
+    void get_str_STEERChanged();
+    void get_str_BRAKEChanged();
+    void get_str_ALIVEChanged();
+
+    void set_str_QMorAChanged();
+    void set_str_ESTOPChanged();
+    void set_str_GEARChanged();
+    void set_str_SPEEDChanged();
+    void set_str_STEERChanged();
+    void set_str_BRAKEChanged();
+    void set_str_ALIVEChanged();
+
+    void set_str_ID1Changed();
+    void set_str_ID2Changed();
 
 
     void dataChanged( const QVariant data );
