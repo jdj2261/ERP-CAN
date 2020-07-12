@@ -9,6 +9,8 @@
 
 const quint8 SPEED_FACTOR=10;
 const quint8 STEER_FACTOR=71;
+const uint ERPID1 = 0x778;
+const uint ERPID2 = 0x778;
 
 typedef struct _pc_to_erp42
 {
@@ -142,8 +144,6 @@ public:
 
     static PC2ERP m_pc2erp;
 
-    PC2ERP showtest() const { return m_pc2erp;}
-
     quint8 m_MorA;
     quint8 m_Estop;
     quint8 m_Gear;
@@ -154,10 +154,19 @@ public:
 
 
 //    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}
-    QString showData() const
+    void showData(PC2ERP m_pc2erp)
     {
-        std::cout << "PCanManager Object!!" << std::endl;
-//        return m_Cycle;
+        std::cout <<" MODE: "  << +m_pc2erp.MODE
+                  <<" MorA: "  << +m_pc2erp.MorA
+                  <<" ESTOP: " << +m_pc2erp.ESTOP
+                  <<" GEAR: "  << +m_pc2erp.GEAR
+                  <<" speed: " << m_pc2erp.speed._speed
+                  <<" steer: " << m_pc2erp.steer._steer
+                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
+                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
+                  <<" brake: " << +m_pc2erp.brake
+                  <<" alive: " << +m_pc2erp.alive
+                  << std::endl;
     }
 
 
@@ -190,8 +199,12 @@ private:
 //    quint16 m_getSteerData;
 
     QVariant data_{ "" };
+    ERP2PC m_erp2pc;
 
     /* Thread */
+    void run();
+
+    void getFeedback();
 
 signals:
     void ActiveChanged();
@@ -227,7 +240,7 @@ private slots:
             emit dataChanged( data_ );
         }
     }
-    void run();
+
 
 
 };

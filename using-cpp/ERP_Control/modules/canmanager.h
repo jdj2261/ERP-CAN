@@ -15,6 +15,7 @@
 const int8_t PACKET_SIZE = 8;
 const QString PLUGNAME = "peakcan";
 const QString InterFaceNAME = "usb0";
+const uint WriteframeID = 0x777;
 
 using namespace std;
 
@@ -24,7 +25,11 @@ class CanManager : public QObject
 
 public:
     explicit CanManager(QObject *parent = nullptr);
-    virtual ~CanManager() {delete []m_write_frame;}
+    virtual ~CanManager()
+    {
+        delete []m_write_frame;
+        cout << " ERP42 Test Finished..." << endl;
+    }
 
     PCanManager *p_canManager;
 
@@ -49,36 +54,23 @@ public:
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
     void sendRawFrame(QCanBusFrame &frame) const;
-    void setCanFrame();
+    quint8* setCanFrame();
     void writeCanFrame();
 
     /* static */
-    QString m_TextArea;
+    static QString m_TextArea;
     static QCanBusFrame m_busFrame;
-    static QString SendButtonID;
     static QCanBusDevice *send_device;
-
-
-    /* test */
-    QString ShowData()
-    {
-        std::cout << "CanManager Object!!" << std::endl;
-//        std::cout << testID.toStdString() << std::endl;
-        return SendButtonID;
-    }
 
 private:
     QCanBusDevice *m_canDevice;
-//    QCanBusDevice *send_device;
 
     qint64 m_numberFramesWritten;
     QVariant bitRate;
     QString pluginName;
     QString deviceInterfaceName;
-
     QString m_FrameID;
     QString m_FrameData;
-
     const QCanBusFrame m_Frame;
 
     quint8* m_write_frame;
@@ -88,7 +80,7 @@ private:
 
 
     //Thread
-    void run();
+//    void run();
 
 signals:
     void TextAreaChanged();

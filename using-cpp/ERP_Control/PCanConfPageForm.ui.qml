@@ -5,8 +5,8 @@ import QtQuick.Dialogs.qml 1.0
 
 Page {
     id: page
-    width: 1280
-    height: 720
+    width: 1600
+    height: 760
 
     readonly property int steer_MIN_ANGLE: -28
     readonly property int steer_MAX_ANGLE: 28
@@ -301,7 +301,7 @@ Page {
 
     Text {
         id: textRawData
-        x: 630
+        x: 690
         y: 25
         text: qsTr("Console Output")
         font.pixelSize: 12
@@ -309,7 +309,7 @@ Page {
 
     TextArea {
         id: textAreaRawData
-        x: 630
+        x: 690
         y: 55
         width: 573
         height: 44
@@ -516,16 +516,16 @@ Page {
     }
 
     Rectangle {
-        id: frame
-        x: 630
+        id: frameFeedback
+        x: 690
         y: 200
-        width: 635
+        width: 853
         height: 280
         border.color: "black"
 
         Row {
-            id: row51
-            x: 8
+            id: rowFB1
+            x: 102
             y: 62
             width: 627
             height: 102
@@ -538,16 +538,15 @@ Page {
 
                 Text {
 
-                    id: textMorA1
+                    id: textFBMorA1
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("MorA")
                 }
                 TextArea {
-                    id: textAreaMorA1
+                    id: textAreaFBMorA1
                     width: 50
                     height: 30
-                    enabled: switchActive.checked
                     text: qsTr(pcanManager.QMorA)
                     readOnly: true
                 }
@@ -557,16 +556,15 @@ Page {
                 height: 50
                 spacing: 10
                 Text {
-                    id: textestop1
+                    id: texteFBstop1
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("E-STOP")
                 }
                 TextArea {
-                    id: textAreaestop1
+                    id: textAreaFBestop1
                     width: 50
                     height: 30
-                    enabled: switchActive.checked
                     text: qsTr(pcanManager.ESTOP)
                     readOnly: true
                 }
@@ -576,16 +574,15 @@ Page {
                 height: 50
                 spacing: 10
                 Text {
-                    id: textgear1
+                    id: textFBgear1
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("GEAR")
                 }
                 TextArea {
-                    id: textAreagear1
+                    id: textAreaFBgear1
                     width: 50
                     height: 30
-                    enabled: switchActive.checked
                     text: qsTr(pcanManager.GEAR)
                     readOnly: true
                 }
@@ -595,24 +592,22 @@ Page {
                 height: 50
                 spacing: 10
                 Text {
-                    id: textspeed1
+                    id: textFBspeed1
                     width: 100
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("Speed")
                 }
                 TextArea {
-                    id: textAreaspeed123
+                    id: textAreaFBspeed1
                     width: 100
                     height: 30
-                    enabled: switchSpeedControl.checked
                     text: qsTr(pcanManager.SPEED)
                     readOnly: true
                 }
                 TextArea {
-                    id: textAreaspeed12
+                    id: textAreaFBspeed11
                     width: 100
                     height: 30
-                    enabled: switchSpeedControl.checked
                     text: qsTr(pcanManager.modified_SPEED)
                     readOnly: true
                 }
@@ -623,25 +618,23 @@ Page {
                 spacing: 10
 
                 Text {
-                    id: textSteer1
+                    id: textFBSteer1
                     width: 100
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("Steer")
                 }
                 TextArea {
-                    id: textAreaSteer13
+                    id: textAreaFBSteer1
                     width: 100
                     height: 30
-                    enabled: switchSteerControl.checked
                     text: qsTr(pcanManager.STEER)
                     readOnly: true
                 }
                 TextArea {
-                    id: textAreaSteer12
+                    id: textAreaFBSteer11
                     width: 100
                     height: 30
                     text: qsTr(pcanManager.modified_STEER)
-                    enabled: switchSteerControl.checked
                     readOnly: true
                 }
             }
@@ -650,25 +643,23 @@ Page {
                 height: 50
                 spacing: 10
                 Text {
-                    id: textBrake123
+                    id: textFBBrake1
                     width: 100
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("Brake")
                 }
                 TextArea {
-                    id: textAreaBrake12
+                    id: textAreaFBBrake1
                     width: 100
                     height: 30
                     text: qsTr(pcanManager.BRAKE)
-                    enabled: switchBrakeControl.checked
                     readOnly: true
                 }
                 TextArea {
-                    id: textAreaBrake13
+                    id: textAreaFBBrake11
                     width: 100
                     height: 30
                     text: qsTr(pcanManager.modified_BRAKE)
-                    enabled: switchBrakeControl.checked
                     readOnly: true
                 }
             }
@@ -677,16 +668,15 @@ Page {
                 height: 50
                 spacing: 10
                 Text {
-                    id: textAlive12
+                    id: textFBAlive1
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("Alive")
                 }
                 TextArea {
-                    id: textAreaAlive123
+                    id: textAreaFBAlive1
                     width: 50
                     height: 30
-                    enabled: switchActive.checked
                     text: qsTr(pcanManager.ALIVE)
                     readOnly: true
                 }
@@ -695,8 +685,8 @@ Page {
 
         Text {
             id: element
-            x: 279
-            y: 8
+            x: 384
+            y: 14
             width: 86
             height: 26
             text: qsTr("Feedback")
@@ -705,70 +695,59 @@ Page {
         }
 
         Row {
-            id: row52
-            x: 8
+            id: rowFeedback2
+            x: 102
             y: 170
-            width: 627
+            width: 743
             height: 102
             Column {
-                width: 50
+                width: 100
                 height: 50
                 Text {
-                    id: textMorA2
-                    width: 50
-                    text: qsTr("MorA")
+                    id: textFBEncoder0
+                    width: 100
+                    text: qsTr("Encoder0")
                     horizontalAlignment: Text.AlignHCenter
                 }
-
                 TextArea {
-                    id: textAreaMorA2
-                    width: 50
+                    id: textAreaFBEncoder0
+                    width: 100
                     height: 30
                     text: qsTr(pcanManager.QMorA)
-                    readOnly: true
-                    enabled: switchActive.checked
                 }
+                TextArea {
+                    id: textAreaFBEncoder00
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.QMorA)
+                }
+
                 spacing: 10
             }
 
             Column {
-                width: 50
+                width: 100
                 height: 50
                 Text {
-                    id: textestop2
-                    width: 50
-                    text: qsTr("E-STOP")
+                    id: textFBEncoder1
+                    width: 100
+                    text: qsTr("Encoder1")
                     horizontalAlignment: Text.AlignHCenter
                 }
 
                 TextArea {
-                    id: textAreaestop2
-                    width: 50
+                    id: textAreaFBEncoder1
+                    width: 100
                     height: 30
                     text: qsTr(pcanManager.ESTOP)
                     readOnly: true
-                    enabled: switchActive.checked
                 }
-                spacing: 10
-            }
-
-            Column {
-                width: 50
-                height: 50
-                Text {
-                    id: textgear2
-                    width: 50
-                    text: qsTr("GEAR")
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
                 TextArea {
-                    id: textAreagear2
-                    width: 50
+                    id: textAreaFBEncoder11
+                    width: 100
                     height: 30
-                    text: qsTr(pcanManager.GEAR)
+                    text: qsTr(pcanManager.ESTOP)
                     readOnly: true
-                    enabled: switchActive.checked
                 }
                 spacing: 10
             }
@@ -777,88 +756,52 @@ Page {
                 width: 100
                 height: 50
                 Text {
-                    id: textspeed2
+                    id: textFBEncoder2
                     width: 100
-                    text: qsTr("Speed")
+                    text: qsTr("Encoder2")
                     horizontalAlignment: Text.AlignHCenter
                 }
 
                 TextArea {
-                    id: textAreaspeed124
+                    id: textAreaFBEncoder2
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.GEAR)
+                    readOnly: true
+                }
+                TextArea {
+                    id: textAreaFBEncoder22
+                    width: 100
+                    height: 30
+                    text: qsTr(pcanManager.GEAR)
+                    readOnly: true
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 100
+                height: 50
+                Text {
+                    id: textFBEncoder3
+                    width: 100
+                    text: qsTr("Encoder3")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaFBEncoder3
                     width: 100
                     height: 30
                     text: qsTr(pcanManager.SPEED)
                     readOnly: true
-                    enabled: switchSpeedControl.checked
                 }
-
                 TextArea {
-                    id: textAreaspeed13
+                    id: textAreaFBEncoder33
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.modified_SPEED)
+                    text: qsTr(pcanManager.SPEED)
                     readOnly: true
-                    enabled: switchSpeedControl.checked
-                }
-                spacing: 10
-            }
-
-            Column {
-                width: 100
-                height: 50
-                Text {
-                    id: textSteer2
-                    width: 100
-                    text: qsTr("Steer")
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                TextArea {
-                    id: textAreaSteer14
-                    width: 100
-                    height: 30
-                    text: qsTr(pcanManager.STEER)
-                    readOnly: true
-                    enabled: switchSteerControl.checked
-                }
-
-                TextArea {
-                    id: textAreaSteer15
-                    width: 100
-                    height: 30
-                    text: qsTr(pcanManager.modified_STEER)
-                    readOnly: true
-                    enabled: switchSteerControl.checked
-                }
-                spacing: 10
-            }
-
-            Column {
-                width: 100
-                height: 50
-                Text {
-                    id: textBrake124
-                    width: 100
-                    text: qsTr("Brake")
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                TextArea {
-                    id: textAreaBrake14
-                    width: 100
-                    height: 30
-                    text: qsTr(pcanManager.BRAKE)
-                    readOnly: true
-                    enabled: switchBrakeControl.checked
-                }
-
-                TextArea {
-                    id: textAreaBrake15
-                    width: 100
-                    height: 30
-                    text: qsTr(pcanManager.modified_BRAKE)
-                    readOnly: true
-                    enabled: switchBrakeControl.checked
                 }
                 spacing: 10
             }
@@ -867,32 +810,175 @@ Page {
                 width: 50
                 height: 50
                 Text {
-                    id: textAlive13
+                    id: textFBBRAKE_CMD_RAW
                     width: 50
-                    text: qsTr("Alive")
+                    text: qsTr("B.C.R")
                     horizontalAlignment: Text.AlignHCenter
                 }
 
                 TextArea {
-                    id: textAreaAlive124
+                    id: textAreaFBBRAKE_CMD_RAW1
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.STEER)
+                    readOnly: true
+                }
+
+                TextArea {
+                    id: textAreaFBBRAKE_CMD_RAW11
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.modified_STEER)
+                    readOnly: true
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textFBBrake_RAW
+                    width: 50
+                    text: qsTr("B.R")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaBrake_RAW1
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.BRAKE)
+                    readOnly: true
+                }
+
+                TextArea {
+                    id: textAreaBrake_RAW11
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.modified_BRAKE)
+                    readOnly: true
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textFBBrake_Echo
+                    width: 50
+                    text: qsTr("B.E")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaBrake_Echo
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.BRAKE)
+                    readOnly: true
+                }
+
+                TextArea {
+                    id: textAreaBrake_Echo1
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.modified_BRAKE)
+                    readOnly: true
+                }
+                spacing: 10
+            }
+
+            Column {
+                width: 50
+                height: 50
+                Text {
+                    id: textBrake_init_max
+                    width: 50
+                    text: qsTr("B.I.M")
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                TextArea {
+                    id: textAreaBrake_init_max
                     width: 50
                     height: 30
                     text: qsTr(pcanManager.ALIVE)
                     readOnly: true
-                    enabled: switchActive.checked
+                }
+
+                TextArea {
+                    id: textAreaBrake_init_max1
+                    width: 50
+                    height: 30
+                    text: qsTr(pcanManager.ALIVE)
+                    readOnly: true
                 }
                 spacing: 10
             }
             spacing: 20
         }
+
+        Column {
+            id: columnFeedBackID
+            x: 8
+            y: 62
+            width: 79
+            height: 102
+
+            Text {
+                id: textFBID
+                width: 79
+                height: 17
+
+                text: qsTr("ID")
+                font.pointSize: 11
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            TextArea {
+                id: textAreaFBID
+                y: 27
+                width: 79
+                height: 30
+                text: qsTr("Text Area")
+            }
+            spacing: 10
+        }
+
+        Column {
+            id: columnFeedBackID2
+            x: 8
+            y: 170
+            width: 79
+            height: 102
+            Text {
+                id: etextFBID2
+                width: 79
+                height: 17
+                text: qsTr("ID")
+                font.pointSize: 11
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            TextArea {
+                id: textAreaFBID2
+                y: 27
+                width: 79
+                height: 30
+                text: qsTr("Text Area")
+            }
+            spacing: 10
+        }
     }
 
     Image {
         id: name
-        x: 1032
-        y: 479
+        x: 1215
+        y: 486
         width: 171
-        height: 144
+        height: 177
         source: "../images/erp42.png"
     }
 }

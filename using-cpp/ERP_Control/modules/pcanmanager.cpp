@@ -2,7 +2,7 @@
 #include "canmanager.h"
 #define T true
 
-//QString CanManager::m_TextArea;
+QString CanManager::m_TextArea;
 //extern QCanBusDevice *send_device;
 //extern QCanBusFrame m_busFrame;
 //QCanBusFrame CanManager::m_busFrame;
@@ -15,7 +15,7 @@ PCanManager::PCanManager(QObject *parent):
     m_SteerAngle(0),
     m_Speed(0),
     m_Brake(0),
-    m_Cycle(20),
+    m_Cycle(1000),
     m_ActiveEnable(false),
     m_AutoEnable(false),
     m_EstopEnable(false),
@@ -33,10 +33,7 @@ PCanManager::PCanManager(QObject *parent):
     m_str_BRAKE("0"),
     m_str_ALIVE("0")
 {
-    //    m_AlvCnt = 0;
-    //    timerSendMsg = new QTimer(this);
-    //    timerSendMsg->setTimerType(Qt::PreciseTimer);
-    //    connect(timerSendMsg, SIGNAL(timeout()), this, SLOT(sendCmdMessage()));
+
 }
 
 void PCanManager::setActive(const bool &arg)
@@ -111,7 +108,6 @@ void PCanManager::setGearDrive(const bool &arg)
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
 
-//    m_GearDrive = arg;
     emit GearDriveChanged();
 
     m_str_GEAR = QString::number(D, 16);
@@ -152,6 +148,10 @@ void PCanManager::setSteerAngle(const qint16 &arg)
     if(T)
         qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
 //    std::cout << " test 1 : " << getData(CanManager::m_TextArea).toStdString() << std::endl;
+//    QStringList list = CanManager::m_TextArea.split(" ");
+//    qDebug()<<"for %I in" << list;
+//    std::cout << list[4].toStdString() << std::endl;
+//    getFeedback();
 //    std::cout << " test 2 : " << a->ShowData().toStdString() << std::endl;
 //    std::cout << " test 3 : " << m_SteerAngle << std::endl;
 
@@ -197,13 +197,13 @@ void PCanManager::setCycle(const quint16 &arg)
 
 }
 
-
-//void PCanManager::sendCmdMessage()
-//{
-//    //check acc, aeb, eps state
-//    if(T)
-//        qDebug() << tr("%1 >").arg(__func__);
-//}
+void PCanManager::getFeedback()
+{
+    std::cout << " test 1 : " << getData(CanManager::m_TextArea).toStdString() << std::endl;
+    QStringList list = CanManager::m_TextArea.split(" ");
+    qDebug()<<"for %I in" << list;
+    std::cout << list[4].toStdString() << std::endl;
+}
 
 void PCanManager::run()
 {
@@ -228,21 +228,16 @@ void PCanManager::run()
 
         m_pc2erp.brake = m_Brake;
         m_pc2erp.alive = alive_cnt;
-        std::cout <<" MODE: "  << +m_pc2erp.MODE
-                  <<" MorA: "  << +m_pc2erp.MorA
-                  <<" ESTOP: " << +m_pc2erp.ESTOP
-                  <<" GEAR: "  << +m_pc2erp.GEAR
-                  <<" speed: " << m_pc2erp.speed._speed
-                  <<" steer: " << m_pc2erp.steer._steer
-                  <<std::hex<<" steer[0]: " << +m_pc2erp.steer.steer[0]
-                  <<std::hex<<" steer[1]: " << +m_pc2erp.steer.steer[1]
-                  <<" brake: " << +m_pc2erp.brake
-                  <<" alive: " << +alive_cnt
-                  << std::endl;
 
+        showData(m_pc2erp);
+        setData(m_pc2erp.MODE);
         m_str_ALIVE = QString::number(alive_cnt,16);
         emit str_ALIVEChanged();
-        setData(m_pc2erp.MODE);
+
+        if (!CanManager::m_TextArea.isNull())
+        {
+            getFeedback();
+        }
 
         msleep(m_Cycle);
     }

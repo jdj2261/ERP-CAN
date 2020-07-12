@@ -7,7 +7,6 @@
 
 QCanBusDevice *CanManager::send_device;
 QCanBusFrame CanManager::m_busFrame;
-QString CanManager::SendButtonID;
 PC2ERP PCanManager::m_pc2erp;
 
 CanManager::CanManager(QObject *parent) : QObject(parent),
@@ -125,7 +124,7 @@ void CanManager::processReceivedFrames()
         m_TextArea = view;
 
 //        buttontest();
-        setCanFrame();
+        writeCanFrame();
         emit TextAreaChanged();
 
         QThread::usleep(1000);
@@ -175,7 +174,7 @@ void CanManager::setFrameData(const QString &frameData)
     emit frameDataChanged(m_FrameData);
 }
 
-void CanManager::setCanFrame()
+quint8* CanManager::setCanFrame()
 {
 //    qDebug() << "set Can Frame";
     this->m_write_frame[0] = p_canManager->m_pc2erp.MODE;
@@ -186,19 +185,32 @@ void CanManager::setCanFrame()
     this->m_write_frame[5] = p_canManager->m_pc2erp.brake;
     this->m_write_frame[7] = p_canManager->m_pc2erp.alive;
 
-    for (int i = 0; i< PACKET_SIZE; i++)
-    {
-        cout << hex <<+this->m_write_frame[i] << " ";
-    }
-    cout << endl;
+    return this->m_write_frame;
+//    for (int i = 0; i< PACKET_SIZE; i++)
+//    {
+//        cout << hex <<+this->m_write_frame[i] << " ";
+//    }
+//    cout << endl;
 
 }
 
 void CanManager::writeCanFrame()
 {
+    const uint id = WriteframeID;
+    quint8* data = setCanFrame();
 
-//    qDebug() <<
+    QByteArray databuf;
+    databuf = QByteArray(reinterpret_cast<char*>(data), PACKET_SIZE);
 
+    QCanBusFrame CanFrame = QCanBusFrame(id, databuf);
+
+    if (!send_device)
+    {
+        std::cout << "not connect" << std::endl;
+        return;
+    }
+    else
+        sendRawFrame(CanFrame);
 }
 
 
@@ -207,7 +219,7 @@ void CanManager::buttontest()
     qDebug()<<m_FrameID<<m_FrameData;
 
     QString id = m_FrameID;
-    SendButtonID = m_FrameID;
+
     const uint frameId = id.toUInt(nullptr, 16);
 
     QString data = m_FrameData;

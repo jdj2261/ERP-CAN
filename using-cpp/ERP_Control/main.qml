@@ -6,8 +6,8 @@ import unmansol.erp42.canmanager 0.1
 ApplicationWindow {
     id: root
     visible: true
-    width: 1280
-    height: 720
+    width: 1600
+    height: 760
     title: qsTr("UNMANNED ERP42 CONTROL")
 
 
@@ -48,7 +48,7 @@ ApplicationWindow {
 
     Text {
         id: textID
-        x: 650
+        x: 710
         y: 200
         width: 100
         height: 40
@@ -84,7 +84,7 @@ ApplicationWindow {
 
     TextField {
         id: textInputID
-        x: 630
+        x: 690
         y: 180
         width: 100
         height: 40
@@ -95,7 +95,7 @@ ApplicationWindow {
 
     Text {
         id: textData
-        x: 880
+        x: 930
         y: 160
         width: 100
         height: 40
@@ -106,7 +106,7 @@ ApplicationWindow {
 
     TextField {
         id: textInputDATA
-        x: 750
+        x: 800
         y: 180
         width: 300
         height: 40
@@ -118,7 +118,7 @@ ApplicationWindow {
 
     Button {
         id: proccessButton
-        x: 1070
+        x: 1120
         y: 180
         width: 70
         height: 40
