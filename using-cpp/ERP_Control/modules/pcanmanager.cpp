@@ -31,9 +31,25 @@ PCanManager::PCanManager(QObject *parent):
     m_str_SPEED("0"),
     m_str_STEER("0"),
     m_str_BRAKE("0"),
-    m_str_ALIVE("0")
-{
+    m_str_ALIVE("0"),
+    m_modified_str_SteerAngle("0"),
+    m_modified_str_Speed("0"),
+    m_modified_str_Brake("0"),
+    m_FB_str_QMorA("0"),
+    m_FB_str_ESTOP("0"),
+    m_FB_str_GEAR("0"),
+    m_FB_str_SPEED("0"),
+    m_FB_str_STEER("0"),
+    m_FB_str_BRAKE("0"),
+    m_FB_str_ALIVE("0"),
+    m_str_ID1("0"),
+    m_str_ID2("0"),
+    m_FB_modified_str_SteerAngle("0"),
+    m_FB_modified_str_Speed("0"),
+    m_FB_modified_str_Brake("0")
 
+{
+    cout << "PCAN START" << endl;
 }
 
 void PCanManager::setActive(const bool &arg)
@@ -43,8 +59,6 @@ void PCanManager::setActive(const bool &arg)
 
     m_ActiveEnable = arg;
     emit ActiveChanged();
-
-
 }
 
 void PCanManager::setAutoEnable(const bool &arg)
@@ -244,13 +258,13 @@ void PCanManager::setFeedback1()
     m_FB_str_QMorA  = QString::number(m_FB_MorA,  16);
     m_FB_str_ESTOP  = QString::number(m_FB_Estop, 16);
     m_FB_str_GEAR   = QString::number(m_FB_Gear,  16);
-    m_FB_str_SPEED  = QString::number(m_FB_Speed, 16);
-    m_FB_str_STEER  = QString::number(m_FB_SteerAngle, 16);
+    m_FB_str_SPEED  = QString::number(static_cast<qint16>(m_FB_Speed / SPEED_FACTOR), 16);
+    m_FB_str_STEER  = QString::number(static_cast<qint16>(m_FB_SteerAngle / STEER_FACTOR), 16);
     m_FB_str_BRAKE  = QString::number(m_FB_Brake, 16);
     m_FB_str_ALIVE  = QString::number(m_FB_Cycle, 16);
 
     m_FB_modified_str_Speed = QString::number(static_cast<qint16>(m_FB_Speed / SPEED_FACTOR));
-    m_FB_modified_str_SteerAngle = QString::number(static_cast<qint16>(m_FB_SteerAngle/ STEER_FACTOR));
+    m_FB_modified_str_SteerAngle = QString::number(static_cast<qint16>(m_FB_SteerAngle / STEER_FACTOR));
     m_FB_modified_str_Brake = QString::number(m_FB_Brake);
 
     emit set_str_QMorAChanged();
@@ -263,8 +277,8 @@ void PCanManager::setFeedback1()
 }
 
 
-void PCanManager::setFeedback2()
-{
+//void PCanManager::setFeedback2()
+//{
 //    m_FB_MorA           = m_erp2pc_1.MorA;
 //    m_FB_Estop          = m_erp2pc_1.ESTOP;
 //    m_FB_Gear           = m_erp2pc_1.GEAR;
@@ -292,7 +306,7 @@ void PCanManager::setFeedback2()
 //    emit set_str_STEERChanged();
 //    emit set_str_BRAKEChanged();
 //    emit set_str_ALIVEChanged();
-}
+//}
 
 
 
@@ -334,8 +348,9 @@ void PCanManager::run()
 
     qDebug() << "Inside the worker thread!";
     quint8 alive_cnt = 0;
+    m_stop = false;
 
-    while(1)
+    while(!m_stop)
     {
         alive_cnt++;
 

@@ -52,7 +52,12 @@ class PCanManager : public QThread
 
 public:
     explicit PCanManager(QObject *parent = nullptr);
-    virtual ~PCanManager() {}
+    virtual ~PCanManager() {
+
+        quit();
+        wait();
+        std::cout << " pcan finished .. " << std::endl;
+    }
 
 //    CanManager *a;
 
@@ -208,6 +213,8 @@ public:
     quint8  m_FB_Brake;
     quint16 m_FB_Cycle;
 
+    bool m_stop;
+    void quit() { m_stop = true; }
 
 private:
     bool m_ActiveEnable;

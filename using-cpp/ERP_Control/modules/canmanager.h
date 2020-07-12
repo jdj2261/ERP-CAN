@@ -27,8 +27,8 @@ public:
     explicit CanManager(QObject *parent = nullptr);
     virtual ~CanManager()
     {
-        delete []m_write_frame;
         cout << " ERP42 Test Finished..." << endl;
+        delete []m_write_frame;
     }
 
     PCanManager *p_canManager;

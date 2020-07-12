@@ -16,8 +16,9 @@ CanManager::CanManager(QObject *parent) : QObject(parent),
     this->m_write_frame = new quint8[PACKET_SIZE];
     //init can bus with json or default value
 //    std::cout << "pcanManager" << + p_canManager.m_pc2erp.GEAR << std::endl;
-    std::cout << m_canDevice << std::endl;
-    std::cout << send_device << std::endl;
+    std::cout << "CAN START" << std::endl;
+//    std::cout << m_canDevice << std::endl;
+//    std::cout << send_device << std::endl;
 //    std::cout << "vector" << +m_can_packet.at(7) << std::endl;
     m_numberFramesWritten = 0;
 //    m_canDevice = nullptr;
