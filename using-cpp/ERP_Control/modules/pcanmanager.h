@@ -17,7 +17,7 @@ typedef struct _pc_to_erp42
     quint8 ESTOP;
     quint8 GEAR;
     union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ quint8 steer[2]; qint16 _steer;}; union steer steer;
+    union steer{ qint8 steer[2]; qint16 _steer;}; union steer steer;
     quint8 brake = 0;
     quint8 alive = 0;
 
@@ -30,7 +30,7 @@ typedef struct _erp42_to_pc_1
     quint8 ESTOP;
     quint8 GEAR;
     union speed{ quint8 speed[2]; quint16 _speed;}; union speed speed;
-    union steer{ quint8 steer[2]; qint16 _steer;}; union steer steer;
+    union steer{ qint8 steer[2]; qint16 _steer;}; union steer steer;
     quint8 brake = 0;
     quint8 alive = 0;
 }ERP2PC_1;
@@ -116,6 +116,12 @@ public:
     Q_PROPERTY(QString get_modified_BRAKE READ get_modified_str_BRAKE NOTIFY get_str_BRAKEChanged)
 
     /* ERP to PC */
+
+    // ID
+    Q_PROPERTY(QString set_ID1 READ set_str_ID1 NOTIFY set_str_ID1Changed)
+    Q_PROPERTY(QString set_ID2 READ set_str_ID2 NOTIFY set_str_ID2Changed)
+
+    // FeedBack 1
     Q_PROPERTY(QString set_QMorA READ set_str_QMorA NOTIFY set_str_QMorAChanged)
     Q_PROPERTY(QString set_ESTOP READ set_str_ESTOP NOTIFY set_str_ESTOPChanged)
     Q_PROPERTY(QString set_GEAR  READ set_str_GEAR  NOTIFY set_str_GEARChanged)
@@ -128,8 +134,25 @@ public:
     Q_PROPERTY(QString set_modified_STEER READ set_modified_str_STEER NOTIFY set_str_STEERChanged)
     Q_PROPERTY(QString set_modified_BRAKE READ set_modified_str_BRAKE NOTIFY set_str_BRAKEChanged)
 
-    Q_PROPERTY(QString set_ID1 READ set_str_ID1 NOTIFY set_str_ID1Changed)
-    Q_PROPERTY(QString set_ID2 READ set_str_ID2 NOTIFY set_str_ID2Changed)
+    // FeedBack 2
+    Q_PROPERTY(QString set_Encoder0 READ set_str_Encoder0 NOTIFY set_str_Encoder0Changed)
+    Q_PROPERTY(QString set_Encoder1 READ set_str_Encoder1 NOTIFY set_str_Encoder1Changed)
+    Q_PROPERTY(QString set_Encoder2 READ set_str_Encoder2 NOTIFY set_str_Encoder2Changed)
+    Q_PROPERTY(QString set_Encoder3 READ set_str_Encoder3 NOTIFY set_str_Encoder3Changed)
+    Q_PROPERTY(QString set_BCR READ set_str_BCR NOTIFY set_str_BCRChanged)
+    Q_PROPERTY(QString set_BR READ set_str_BR NOTIFY set_str_BRChanged)
+    Q_PROPERTY(QString set_BE READ set_str_BE NOTIFY set_str_BEChanged)
+    Q_PROPERTY(QString set_BIM READ set_str_BIM NOTIFY set_str_BIMChanged)
+
+    Q_PROPERTY(QString set_modified_Encoder0 READ set_modified_str_Encoder0 NOTIFY set_str_Encoder0Changed)
+    Q_PROPERTY(QString set_modified_Encoder1 READ set_modified_str_Encoder1 NOTIFY set_str_Encoder1Changed)
+    Q_PROPERTY(QString set_modified_Encoder2 READ set_modified_str_Encoder2 NOTIFY set_str_Encoder2Changed)
+    Q_PROPERTY(QString set_modified_Encoder3 READ set_modified_str_Encoder3 NOTIFY set_str_Encoder3Changed)
+    Q_PROPERTY(QString set_modified_BCR      READ set_modified_str_BCR      NOTIFY set_str_BCRChanged)
+    Q_PROPERTY(QString set_modified_BR       READ set_modified_str_BR       NOTIFY set_str_BRChanged)
+    Q_PROPERTY(QString set_modified_BE       READ set_modified_str_BE       NOTIFY set_str_BEChanged)
+    Q_PROPERTY(QString set_modified_BIM      READ set_modified_str_BIM      NOTIFY set_str_BIMChanged)
+
 
     /* TEST */
     Q_PROPERTY(QVariant data READ getData WRITE setData NOTIFY dataChanged )
@@ -178,6 +201,10 @@ public:
     QString get_modified_str_STEER() const {return m_modified_str_SteerAngle;}
     QString get_modified_str_BRAKE() const {return m_modified_str_Brake;}
 
+
+    QString set_str_ID1() const {return m_str_ID1;}
+    QString set_str_ID2() const {return m_str_ID2;}
+
     QString set_str_QMorA() const {return m_FB_str_QMorA;}
     QString set_str_ESTOP() const {return m_FB_str_ESTOP;}
     QString set_str_GEAR()  const {return m_FB_str_GEAR;}
@@ -190,8 +217,24 @@ public:
     QString set_modified_str_STEER() const {return m_FB_modified_str_SteerAngle;}
     QString set_modified_str_BRAKE() const {return m_FB_modified_str_Brake;}
 
-    QString set_str_ID1() const {return m_str_ID1;}
-    QString set_str_ID2() const {return m_str_ID2;}
+
+    QString set_str_Encoder0() const {return m_FB_str_Encoder0;}
+    QString set_str_Encoder1() const {return m_FB_str_Encoder1;}
+    QString set_str_Encoder2() const {return m_FB_str_Encoder2;}
+    QString set_str_Encoder3() const {return m_FB_str_Encoder3;}
+    QString set_str_BCR()      const {return m_FB_str_BCR;}
+    QString set_str_BR()       const {return m_FB_str_BR;}
+    QString set_str_BE()       const {return m_FB_str_BE;}
+    QString set_str_BIM()      const {return m_FB_str_BIM;}
+
+    QString set_modified_str_Encoder0() const {return m_FB_modified_str_Encoder0;}
+    QString set_modified_str_Encoder1() const {return m_FB_modified_str_Encoder1;}
+    QString set_modified_str_Encoder2() const {return m_FB_modified_str_Encoder2;}
+    QString set_modified_str_Encoder3() const {return m_FB_modified_str_Encoder3;}
+    QString set_modified_str_BCR()      const {return m_FB_modified_str_BCR;}
+    QString set_modified_str_BR()       const {return m_FB_modified_str_BR;}
+    QString set_modified_str_BE()       const {return m_FB_modified_str_BE;}
+    QString set_modified_str_BIM()      const {return m_FB_modified_str_BIM;}
 
     QString getData(QString m_getData) const {return m_getData;}
 
@@ -205,13 +248,7 @@ public:
     quint8 m_Brake;
     quint16 m_Cycle;
 
-    quint8  m_FB_MorA;
-    quint8  m_FB_Estop;
-    quint8  m_FB_Gear;
-    qint16  m_FB_SteerAngle;
-    quint16 m_FB_Speed;
-    quint8  m_FB_Brake;
-    quint16 m_FB_Cycle;
+
 
     bool m_stop;
     void quit() { m_stop = true; }
@@ -227,6 +264,9 @@ private:
     bool m_GearNeutral;
     bool m_GearReverse;
 
+    QString m_str_ID1;
+    QString m_str_ID2;
+
     QString m_str_QMorA;
     QString m_str_ESTOP;
     QString m_str_GEAR;
@@ -239,6 +279,14 @@ private:
     QString m_modified_str_Speed;
     QString m_modified_str_Brake;
 
+    quint8  m_FB_MorA;
+    quint8  m_FB_Estop;
+    quint8  m_FB_Gear;
+    qint16  m_FB_SteerAngle;
+    quint16 m_FB_Speed;
+    quint8  m_FB_Brake;
+    quint16 m_FB_Cycle;
+
     QString m_FB_str_QMorA;
     QString m_FB_str_ESTOP;
     QString m_FB_str_GEAR;
@@ -247,12 +295,36 @@ private:
     QString m_FB_str_BRAKE;
     QString m_FB_str_ALIVE;
 
-    QString m_str_ID1;
-    QString m_str_ID2;
-
     QString m_FB_modified_str_SteerAngle;
     QString m_FB_modified_str_Speed;
     QString m_FB_modified_str_Brake;
+
+    qint32 m_FB_Encoder0;
+    qint32 m_FB_Encoder1;
+    qint32 m_FB_Encoder2;
+    qint32 m_FB_Encoder3;
+    quint8 m_FB_BCR;
+    quint8 m_FB_BR;
+    quint8 m_FB_BE;
+    quint8 m_FB_BIM;
+
+    QString m_FB_str_Encoder0;
+    QString m_FB_str_Encoder1;
+    QString m_FB_str_Encoder2;
+    QString m_FB_str_Encoder3;
+    QString m_FB_str_BCR;
+    QString m_FB_str_BR;
+    QString m_FB_str_BE;
+    QString m_FB_str_BIM;
+
+    QString m_FB_modified_str_Encoder0;
+    QString m_FB_modified_str_Encoder1;
+    QString m_FB_modified_str_Encoder2;
+    QString m_FB_modified_str_Encoder3;
+    QString m_FB_modified_str_BCR;
+    QString m_FB_modified_str_BR;
+    QString m_FB_modified_str_BE;
+    QString m_FB_modified_str_BIM;
 
 
     const QString m_getData;
@@ -304,6 +376,9 @@ signals:
 
     void CycleChanged();
 
+    void set_str_ID1Changed();
+    void set_str_ID2Changed();
+
     void get_str_QMorAChanged();
     void get_str_ESTOPChanged();
     void get_str_GEARChanged();
@@ -320,8 +395,15 @@ signals:
     void set_str_BRAKEChanged();
     void set_str_ALIVEChanged();
 
-    void set_str_ID1Changed();
-    void set_str_ID2Changed();
+    void set_str_Encoder0Changed();
+    void set_str_Encoder1Changed();
+    void set_str_Encoder2Changed();
+    void set_str_Encoder3Changed();
+    void set_str_BCRChanged();
+    void set_str_BRChanged();
+    void set_str_BEChanged();
+    void set_str_BIMChanged();
+
 
 
     void dataChanged( const QVariant data );

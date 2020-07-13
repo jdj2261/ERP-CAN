@@ -25,6 +25,10 @@ PCanManager::PCanManager(QObject *parent):
     m_GearDrive(false),
     m_GearNeutral(false),
     m_GearReverse(false),
+
+    m_str_ID1("0"),
+    m_str_ID2("0"),
+
     m_str_QMorA("0"),
     m_str_ESTOP("0"),
     m_str_GEAR("0"),
@@ -35,6 +39,7 @@ PCanManager::PCanManager(QObject *parent):
     m_modified_str_SteerAngle("0"),
     m_modified_str_Speed("0"),
     m_modified_str_Brake("0"),
+
     m_FB_str_QMorA("0"),
     m_FB_str_ESTOP("0"),
     m_FB_str_GEAR("0"),
@@ -42,12 +47,26 @@ PCanManager::PCanManager(QObject *parent):
     m_FB_str_STEER("0"),
     m_FB_str_BRAKE("0"),
     m_FB_str_ALIVE("0"),
-    m_str_ID1("0"),
-    m_str_ID2("0"),
     m_FB_modified_str_SteerAngle("0"),
     m_FB_modified_str_Speed("0"),
-    m_FB_modified_str_Brake("0")
+    m_FB_modified_str_Brake("0"),
 
+    m_FB_str_Encoder0("0"),
+    m_FB_str_Encoder1("0"),
+    m_FB_str_Encoder2("0"),
+    m_FB_str_Encoder3("0"),
+    m_FB_str_BCR("0"),
+    m_FB_str_BR("0"),
+    m_FB_str_BE("0"),
+    m_FB_str_BIM("0"),
+    m_FB_modified_str_Encoder0("0"),
+    m_FB_modified_str_Encoder1("0"),
+    m_FB_modified_str_Encoder2("0"),
+    m_FB_modified_str_Encoder3("0"),
+    m_FB_modified_str_BCR("0"),
+    m_FB_modified_str_BR("0"),
+    m_FB_modified_str_BE("0"),
+    m_FB_modified_str_BIM("0")
 {
     cout << "PCAN START" << endl;
 }
@@ -212,28 +231,40 @@ void PCanManager::getFeedback()
 
     switch (ERP_CAN_Id)
     {
-    case TEST_ID:
+    case ERP_ID_1:
         cout << "1" << endl;
         m_str_ID1 = QString::number(TEST_ID,16);
 
-        m_erp2pc_1.MorA             = list[2].toUInt(&ok, 16);
-        m_erp2pc_1.ESTOP            = list[3].toUInt(&ok, 16);
-        m_erp2pc_1.GEAR             = list[4].toUInt(&ok, 16);
-        m_erp2pc_1.speed._speed     = (list[6].toUInt(&ok, 16) & 0xff) << 8 | (list[5].toUInt(&ok, 16) & 0xff);
-//        m_erp2pc_1.steer._steer     = (list[8].toUInt(&ok, 16) & 0xff) << 8 | (list[7].toUInt(&ok, 16) & 0xff);
-//        m_erp2pc_1.brake            = list[9].toUInt(&ok, 16);
-//        m_erp2pc_1.alive            = list[11].toUInt(&ok, 16);
+        m_erp2pc_1.MorA             = (list[2].toUInt(&ok, 16) & 0x01);
+        m_erp2pc_1.ESTOP            = (list[2].toUInt(&ok, 16) & 0x02);
+        m_erp2pc_1.GEAR             = (list[2].toUInt(&ok, 16) & 0x0c);
+        m_erp2pc_1.speed._speed     = (list[4].toUInt(&ok, 16) & 0xff) << 8 | (list[3].toUInt(&ok, 16) & 0xff);
+        m_erp2pc_1.steer._steer     = (list[6].toUInt(&ok, 16) & 0xff) << 8 | (list[5].toUInt(&ok, 16) & 0xff);
+        m_erp2pc_1.brake            = list[7].toUInt(&ok, 16);
+        m_erp2pc_1.alive            = list[9].toUInt(&ok, 16);
 
         setFeedback1();
         emit set_str_ID1Changed();
         break;
 
-    case ERP_ID_2:
+    case TEST_ID:
         cout << "2" << endl;
         m_str_ID2 = QString::number(ERP_ID_2,16);
 
+        m_erp2pc_2.Encoder[0]       = list[2].toUInt(&ok, 16);
+        m_erp2pc_2.Encoder[1]       = list[3].toUInt(&ok, 16);
+        m_erp2pc_2.Encoder[2]       = list[4].toUInt(&ok, 16);
+        m_erp2pc_2.Encoder[3]       = list[5].toUInt(&ok, 16);
+        m_erp2pc_2.Brake_Cmd_Raw    = list[6].toUInt(&ok, 16);
+//        m_erp2pc_2.Brake_Raw        = list[7].toUInt(&ok, 16);
+//        m_erp2pc_2.Brake_Echo       = list[8].toUInt(&ok, 16);
+//        m_erp2pc_2.Brake_Init_Max   = list[9].toUInt(&ok, 16);
+
+        setFeedback2();
         emit set_str_ID2Changed();
         break;
+
+    // 2B0
 //    case TEST_ID:
 //        cout << "test" << endl;
 //        break;
@@ -277,71 +308,45 @@ void PCanManager::setFeedback1()
 }
 
 
-//void PCanManager::setFeedback2()
-//{
-//    m_FB_MorA           = m_erp2pc_1.MorA;
-//    m_FB_Estop          = m_erp2pc_1.ESTOP;
-//    m_FB_Gear           = m_erp2pc_1.GEAR;
-//    m_FB_Speed          = (m_erp2pc_1.speed.speed[0] & 0xff << 8) | (m_erp2pc_1.speed.speed[1] & 0xff);
-//    m_FB_SteerAngle     = (m_erp2pc_1.steer.steer[0] & 0xff << 8) | (m_erp2pc_1.steer.steer[1] & 0xff);
-//    m_FB_Brake          = m_erp2pc_1.brake;
-//    m_FB_Cycle          = m_erp2pc_1.alive;
+void PCanManager::setFeedback2()
+{
+    m_FB_Encoder0   = m_erp2pc_2.Encoder[0];
+    m_FB_Encoder1   = m_erp2pc_2.Encoder[1];
+    m_FB_Encoder2   = m_erp2pc_2.Encoder[2];
+    m_FB_Encoder3   = m_erp2pc_2.Encoder[3];
+    m_FB_BCR        = m_erp2pc_2.Brake_Cmd_Raw;
+    m_FB_BR         = m_erp2pc_2.Brake_Raw;
+    m_FB_BE         = m_erp2pc_2.Brake_Echo;
+    m_FB_BIM        = m_erp2pc_2.Brake_Init_Max;
 
-//    m_FB_str_QMorA  = QString::number(m_FB_MorA,  16);
-//    m_FB_str_ESTOP  = QString::number(m_FB_Estop, 16);
-//    m_FB_str_GEAR   = QString::number(m_FB_Gear,  16);
-//    m_FB_str_SPEED  = QString::number(m_FB_Speed, 16);
-//    m_FB_str_STEER  = QString::number(m_FB_SteerAngle, 16);
-//    m_FB_str_BRAKE  = QString::number(m_FB_Brake, 16);
-//    m_FB_str_ALIVE  = QString::number(m_FB_Cycle, 16);
+    m_FB_str_Encoder0   = QString::number(m_FB_Encoder0, 16);
+    m_FB_str_Encoder1   = QString::number(m_FB_Encoder1, 16);
+    m_FB_str_Encoder2   = QString::number(m_FB_Encoder2, 16);
+    m_FB_str_Encoder3   = QString::number(m_FB_Encoder3, 16);
+    m_FB_str_BCR        = QString::number(m_FB_BCR, 16);
+    m_FB_str_BR         = QString::number(m_FB_BR, 16);
+    m_FB_str_BE         = QString::number(m_FB_BE, 16);
+    m_FB_str_BIM        = QString::number(m_FB_BIM, 16);
 
-//    m_FB_modified_str_SteerAngle = m_FB_str_STEER;
-//    m_FB_modified_str_Speed = m_FB_str_SPEED;
-//    m_FB_modified_str_Brake = QString::number(m_FB_Cycle);
+    m_FB_modified_str_Encoder0   = QString::number(m_FB_Encoder0);
+    m_FB_modified_str_Encoder1   = QString::number(m_FB_Encoder1);
+    m_FB_modified_str_Encoder2   = QString::number(m_FB_Encoder2);
+    m_FB_modified_str_Encoder3   = QString::number(m_FB_Encoder3);
+    m_FB_modified_str_BCR        = QString::number(m_FB_BCR);
+    m_FB_modified_str_BR         = QString::number(m_FB_BR);
+    m_FB_modified_str_BE         = QString::number(m_FB_BE);
+    m_FB_modified_str_BIM        = QString::number(m_FB_BIM);
 
-//    emit set_str_QMorAChanged();
-//    emit set_str_ESTOPChanged();
-//    emit set_str_GEARChanged();
-//    emit set_str_SPEEDChanged();
-//    emit set_str_STEERChanged();
-//    emit set_str_BRAKEChanged();
-//    emit set_str_ALIVEChanged();
-//}
+    emit set_str_Encoder0Changed();
+    emit set_str_Encoder1Changed();
+    emit set_str_Encoder2Changed();
+    emit set_str_Encoder3Changed();
+    emit set_str_BCRChanged();
+    emit set_str_BRChanged();
+    emit set_str_BEChanged();
+    emit set_str_BIMChanged();
+}
 
-
-
-//void setFeee
-
-//{
-//    switch (id)
-//    {
-//    case ERP_ID_1:
-//        cout << "1" << endl;
-
-////        m_erp2pc_1.MorA = list[]
-
-//        m_FB_MorA = m_erp2pc_1.MorA;
-//        m_FB_Estop = m_erp2pc_1.ESTOP;
-//        m_FB_Gear = m_erp2pc_1.GEAR;
-//        m_FB_Speed = (m_erp2pc_1.speed.speed[0] & 0xff << 8) | (m_erp2pc_1.speed.speed[1] & 0xff);
-
-
-
-//        break;
-
-//    case ERP_ID_2:
-//        cout << "2" << endl;
-
-//        break;
-//    case TEST_ID:
-//        cout << "test" << endl;
-//        break;
-
-//    default:
-//        cout << " None.. " << endl;
-//        break;
-//    }
-//}
 
 void PCanManager::run()
 {
@@ -376,7 +381,6 @@ void PCanManager::run()
         if (!CanManager::m_TextArea.isNull())
         {
             getFeedback();
-//            setFeedback();
         }
 
         msleep(m_Cycle);

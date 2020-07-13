@@ -627,14 +627,14 @@ Page {
                     id: textAreaFBSteer1
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_STEER)
+                    text: qsTr(pcanManager.set_STEER)
                     readOnly: true
                 }
                 TextArea {
                     id: textAreaFBSteer11
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_modified_STEER)
+                    text: qsTr(pcanManager.set_modified_STEER)
                     readOnly: true
                 }
             }
@@ -652,14 +652,14 @@ Page {
                     id: textAreaFBBrake1
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_BRAKE)
+                    text: qsTr(pcanManager.set_BRAKE)
                     readOnly: true
                 }
                 TextArea {
                     id: textAreaFBBrake11
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_modified_BRAKE)
+                    text: qsTr(pcanManager.set_modified_BRAKE)
                     readOnly: true
                 }
             }
@@ -677,7 +677,7 @@ Page {
                     id: textAreaFBAlive1
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_ALIVE)
+                    text: qsTr(pcanManager.set_ALIVE)
                     readOnly: true
                 }
             }
@@ -713,13 +713,13 @@ Page {
                     id: textAreaFBEncoder0
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_QMorA)
+                    text: qsTr(pcanManager.set_Encoder0)
                 }
                 TextArea {
                     id: textAreaFBEncoder00
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_QMorA)
+                    text: qsTr(pcanManager.set_modified_Encoder0)
                 }
 
                 spacing: 10
@@ -739,14 +739,14 @@ Page {
                     id: textAreaFBEncoder1
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_ESTOP)
+                    text: qsTr(pcanManager.set_Encoder1)
                     readOnly: true
                 }
                 TextArea {
                     id: textAreaFBEncoder11
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_ESTOP)
+                    text: qsTr(pcanManager.set_modified_Encoder1)
                     readOnly: true
                 }
                 spacing: 10
@@ -766,14 +766,14 @@ Page {
                     id: textAreaFBEncoder2
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_GEAR)
+                    text: qsTr(pcanManager.set_Encoder2)
                     readOnly: true
                 }
                 TextArea {
                     id: textAreaFBEncoder22
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_GEAR)
+                    text: qsTr(pcanManager.set_modified_Encoder2)
                     readOnly: true
                 }
                 spacing: 10
@@ -793,14 +793,14 @@ Page {
                     id: textAreaFBEncoder3
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_SPEED)
+                    text: qsTr(pcanManager.set_Encoder3)
                     readOnly: true
                 }
                 TextArea {
                     id: textAreaFBEncoder33
                     width: 100
                     height: 30
-                    text: qsTr(pcanManager.get_SPEED)
+                    text: qsTr(pcanManager.set_modified_Encoder3)
                     readOnly: true
                 }
                 spacing: 10
@@ -820,7 +820,7 @@ Page {
                     id: textAreaFBBRAKE_CMD_RAW1
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_STEER)
+                    text: qsTr(pcanManager.set_BCR)
                     readOnly: true
                 }
 
@@ -828,7 +828,7 @@ Page {
                     id: textAreaFBBRAKE_CMD_RAW11
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_modified_STEER)
+                    text: qsTr(pcanManager.set_modified_BCR)
                     readOnly: true
                 }
                 spacing: 10
@@ -848,7 +848,7 @@ Page {
                     id: textAreaBrake_RAW1
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_BRAKE)
+                    text: qsTr(pcanManager.set_BR)
                     readOnly: true
                 }
 
@@ -856,7 +856,7 @@ Page {
                     id: textAreaBrake_RAW11
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_modified_BRAKE)
+                    text: qsTr(pcanManager.set_modified_BR)
                     readOnly: true
                 }
                 spacing: 10
@@ -876,7 +876,7 @@ Page {
                     id: textAreaBrake_Echo
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_BRAKE)
+                    text: qsTr(pcanManager.set_BE)
                     readOnly: true
                 }
 
@@ -884,7 +884,7 @@ Page {
                     id: textAreaBrake_Echo1
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_modified_BRAKE)
+                    text: qsTr(pcanManager.set_modified_BE)
                     readOnly: true
                 }
                 spacing: 10
@@ -904,7 +904,7 @@ Page {
                     id: textAreaBrake_init_max
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_ALIVE)
+                    text: qsTr(pcanManager.set_BIM)
                     readOnly: true
                 }
 
@@ -912,7 +912,7 @@ Page {
                     id: textAreaBrake_init_max1
                     width: 50
                     height: 30
-                    text: qsTr(pcanManager.get_ALIVE)
+                    text: qsTr(pcanManager.set_modified_BIM)
                     readOnly: true
                 }
                 spacing: 10
@@ -967,7 +967,7 @@ Page {
                 y: 27
                 width: 79
                 height: 30
-                text: qsTr("Text Area")
+                text: qsTr(pcanManager.set_ID2)
             }
             spacing: 10
         }
