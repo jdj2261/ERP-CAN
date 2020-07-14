@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-
+    // canManager
     CanManager *canManager = new CanManager();
     canManager->connectDevice();
     //    canManager.start();
