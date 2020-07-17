@@ -247,7 +247,7 @@ void PCanManager::getFeedback()
         emit set_str_ID1Changed();
         break;
 
-    case TEST_ID:
+    case ERP_ID_2:
         cout << "2" << endl;
         m_str_ID2 = QString::number(ERP_ID_2,16);
 
