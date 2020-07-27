@@ -299,29 +299,29 @@ Page {
         }
     }
 
-    Text {
-        id: textRawData
-        x: 690
-        y: 25
-        text: qsTr("Console Output")
-        font.pixelSize: 12
-    }
+//    Text {
+//        id: textRawData
+//        x: 690
+//        y: 25
+//        text: qsTr("Console Output")
+//        font.pixelSize: 12
+//    }
 
-    TextArea {
-        id: textAreaRawData
-        x: 690
-        y: 55
-        width: 573
-        height: 44
-        text: qsTr(canManager.TextArea)
-        renderType: Text.NativeRendering
-        verticalAlignment: Text.AlignTop
-        textFormat: Text.AutoText
-        wrapMode: Text.WrapAnywhere
-        readOnly: true
+//    TextArea {
+//        id: textAreaRawData
+//        x: 690
+//        y: 55
+//        width: 573
+//        height: 44
+//        text: qsTr(canManager.TextArea)
+//        renderType: Text.NativeRendering
+//        verticalAlignment: Text.AlignTop
+//        textFormat: Text.AutoText
+//        wrapMode: Text.WrapAnywhere
+//        readOnly: true
 
-        //            TextEdit: canManager.TextArea
-    }
+//        //            TextEdit: canManager.TextArea
+//    }
 
     Row {
         id: row5

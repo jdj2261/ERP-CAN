@@ -126,7 +126,7 @@ void CanManager::processReceivedFrames()
 
 //        buttontest();
         writeCanFrame();
-        emit TextAreaChanged();
+//        emit TextAreaChanged();
 
         QThread::usleep(1000);
     }
