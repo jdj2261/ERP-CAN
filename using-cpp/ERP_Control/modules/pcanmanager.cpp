@@ -365,9 +365,12 @@ void PCanManager::run()
         m_pc2erp.MODE = m_MorA + m_Estop + m_Gear;
 
         m_pc2erp.speed._speed = m_Speed * SPEED_FACTOR;
-        m_pc2erp.steer._steer = (m_SteerAngle * STEER_FACTOR) ;
+        m_pc2erp.steer._steer = (m_SteerAngle * STEER_FACTOR);
 
-        m_pc2erp.steer.steer[0] = (m_pc2erp.steer._steer & 0xff) ;
+        m_pc2erp.speed.speed[0] = (m_pc2erp.speed._speed & 0xff);
+        m_pc2erp.speed.speed[1] = (m_pc2erp.speed._speed & 0xff00) >> 8;
+
+        m_pc2erp.steer.steer[0] = (m_pc2erp.steer._steer & 0xff);
         m_pc2erp.steer.steer[1] = (m_pc2erp.steer._steer & 0xff00) >> 8;
 
         m_pc2erp.brake = m_Brake;
