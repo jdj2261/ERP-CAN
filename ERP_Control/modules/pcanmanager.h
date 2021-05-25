@@ -52,14 +52,11 @@ class PCanManager : public QThread
 
 public:
     explicit PCanManager(QObject *parent = nullptr);
-    virtual ~PCanManager() {
-
+    virtual ~PCanManager() noexcept
+    {
         quit();
         wait();
-        std::cout << " pcan finished .. " << std::endl;
     }
-
-//    CanManager *a;
 
     enum Mode{Mannaul = 0x00, Auto = 0x01};
     enum Estop{Off = 0x00, On = 0x02};
@@ -340,7 +337,7 @@ private:
 
     //    quint16 getSteerData(quint16 m_getSteerData) const {return m_getSteerData;}
 
-    void showData(PC2ERP m_pc2erp)
+    void showData(PC2ERP m_pc2erp) const
     {
         std::cout <<" MODE: "  << +m_pc2erp.MODE
                   <<" MorA: "  << +m_pc2erp.MorA

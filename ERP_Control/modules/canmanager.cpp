@@ -12,19 +12,11 @@ PC2ERP PCanManager::m_pc2erp;
 CanManager::CanManager(QObject *parent) : QObject(parent),
     m_canDevice(nullptr)
 {
-    this->send_device = nullptr;
-    this->m_write_frame = new quint8[PACKET_SIZE];
-    //init can bus with json or default value
-//    std::cout << "pcanManager" << + p_canManager.m_pc2erp.GEAR << std::endl;
-    std::cout << "CAN START" << std::endl;
-//    std::cout << m_canDevice << std::endl;
-//    std::cout << send_device << std::endl;
-//    std::cout << "vector" << +m_can_packet.at(7) << std::endl;
+    send_device = nullptr;
+    m_write_frame.reserve(PACKET_SIZE);
     m_numberFramesWritten = 0;
-//    m_canDevice = nullptr;
     pluginName = PLUGNAME;
     deviceInterfaceName = InterFaceNAME;
-//    connectDevice();
 }
 
 void CanManager::processErrors(QCanBusDevice::CanBusError error) const
@@ -35,7 +27,6 @@ void CanManager::processErrors(QCanBusDevice::CanBusError error) const
     case QCanBusDevice::ConnectionError:
     case QCanBusDevice::ConfigurationError:
     case QCanBusDevice::UnknownError:
-//        qWarning() << "QCanBusError: " << m_canDevice->errorString().toLocal8Bit();
         break;
     default:
         break;
@@ -44,7 +35,6 @@ void CanManager::processErrors(QCanBusDevice::CanBusError error) const
 
 void CanManager::connectDevice()
 {
-
     QString errorString;
 
     m_canDevice = QCanBus::instance()->createDevice(
@@ -59,7 +49,7 @@ void CanManager::connectDevice()
 
     connect(m_canDevice, &QCanBusDevice::errorOccurred, this, &CanManager::processErrors);
     connect(m_canDevice, &QCanBusDevice::framesReceived, this, &CanManager::processReceivedFrames);
-//    connect(m_canDevice, &QCanBusDevice::framesWritten, this, &CanManager::processFramesWritten);
+    connect(m_canDevice, &QCanBusDevice::framesWritten, this, &CanManager::processFramesWritten);
 
     if (!m_canDevice->connectDevice()) {
         qWarning() << tr("Connection error: %1").arg(m_canDevice->errorString());
@@ -175,33 +165,32 @@ void CanManager::setFrameData(const QString &frameData)
     emit frameDataChanged(m_FrameData);
 }
 
-quint8* CanManager::setCanFrame()
+std::vector<quint8> CanManager::setCanFrame()
 {
-//    qDebug() << "set Can Frame";
-    this->m_write_frame[0] = p_canManager->m_pc2erp.MODE;
-    this->m_write_frame[1] = p_canManager->m_pc2erp.speed.speed[1];
-    this->m_write_frame[2] = p_canManager->m_pc2erp.speed.speed[0];
-    this->m_write_frame[3] = p_canManager->m_pc2erp.steer.steer[1];
-    this->m_write_frame[4] = p_canManager->m_pc2erp.steer.steer[0];
-    this->m_write_frame[5] = p_canManager->m_pc2erp.brake;
-    this->m_write_frame[7] = p_canManager->m_pc2erp.alive;
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.MODE);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.speed.speed[1]);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.speed.speed[0]);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.steer.steer[1]);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.steer.steer[0]);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.brake);
+    m_write_frame.emplace_back(p_canManager->m_pc2erp.alive);
 
-    return this->m_write_frame;
-//    for (int i = 0; i< PACKET_SIZE; i++)
+//    for (const auto& i : m_write_frame)
 //    {
-//        cout << hex <<+this->m_write_frame[i] << " ";
+//        cout << hex << i << " ";
 //    }
 //    cout << endl;
-
+    return m_write_frame;
 }
 
 void CanManager::writeCanFrame()
 {
     const uint id = WriteframeID;
-    quint8* data = setCanFrame();
+    std::vector<quint8> data = setCanFrame();
 
     QByteArray databuf;
-    databuf = QByteArray(reinterpret_cast<char*>(data), PACKET_SIZE);
+    databuf = QByteArray(reinterpret_cast<char*>(data.data()), PACKET_SIZE);
+//    databuf = QByteArray(reinterpret_cast<char*>(data), PACKET_SIZE);
 
     QCanBusFrame CanFrame = QCanBusFrame(id, databuf);
 
@@ -213,7 +202,6 @@ void CanManager::writeCanFrame()
     else
         sendRawFrame(CanFrame);
 }
-
 
 void CanManager::buttontest()
 {
@@ -244,46 +232,4 @@ void CanManager::buttontest()
         sendRawFrame(m_busFrame);
 }
 
-void CanManager::setTextArea(const QString &arg)
-{
-//    if(true)
-//        qDebug() << tr("%1 > arg : %2").arg(__func__).arg(arg);
-////    m_TextArea += arg;
-//    emit TextAreaChanged();
-}
-
-//void CanManager::run()
-//{
-//    {
-//        qDebug() << "Inside the worker CanManager thread!";
-
-//        while(1)
-//        {
-
-////            std::cout << m_TextArea.toStdString() << std::endl;
-
-////            QString id = "181";
-////            const uint frameId = id.toUInt(nullptr, 16);
-
-
-////            QString data = "20000001f0";
-////            const QByteArray payload = QByteArray::fromHex(data.remove(QLatin1Char(' ')).toLatin1());
-
-////            QByteArray ba_as_hex_string = payload.toHex();
-
-////            uint num = frameId;
-////            std::cout << std::hex << num << std::endl;
-////            std::cout << ba_as_hex_string.toStdString() << std::endl;
-
-////            QCanBusFrame frame1 = QCanBusFrame(frameId, payload);
-
-//////            this->sendRawFrame(frame1);
-
-//////                std::cout << send_device << std::endl;
-
-//            std::cout << "THis is Thread" << std::endl;
-//            QThread::msleep(1000);
-//        }
-//    }
-//}
 

@@ -66,10 +66,7 @@ PCanManager::PCanManager(QObject *parent):
     m_FB_modified_str_BCR("0"),
     m_FB_modified_str_BR("0"),
     m_FB_modified_str_BE("0"),
-    m_FB_modified_str_BIM("0")
-{
-    cout << "PCAN START" << endl;
-}
+    m_FB_modified_str_BIM("0") {}
 
 void PCanManager::setActive(const bool &arg)
 {

@@ -25,19 +25,15 @@ class CanManager : public QObject
 
 public:
     explicit CanManager(QObject *parent = nullptr);
-    virtual ~CanManager()
-    {
-        cout << " ERP42 Test Finished..." << endl;
-        delete []m_write_frame;
-    }
+    virtual ~CanManager() noexcept {}
+    CanManager ( const CanManager & ) = delete;
+    CanManager ( const CanManager && ) = delete;
 
     PCanManager *p_canManager;
 
-    Q_PROPERTY(QString TextArea  READ getTextArea WRITE setTextArea NOTIFY TextAreaChanged)
     Q_PROPERTY(QString frameID   READ getframeID WRITE setFrameID NOTIFY frameIDChanged)
     Q_PROPERTY(QString frameData READ getframeData WRITE setFrameData NOTIFY frameDataChanged)
 
-    Q_INVOKABLE void setTextArea(const QString &);
     Q_INVOKABLE void buttontest();
 
     QString getTextArea() const { return m_TextArea;}
@@ -54,7 +50,7 @@ public:
     void processErrors(QCanBusDevice::CanBusError) const;
     void processFramesWritten(qint64);
     void sendRawFrame(QCanBusFrame &frame) const;
-    quint8* setCanFrame();
+    std::vector<quint8> setCanFrame();
     void writeCanFrame();
 
     /* static */
@@ -73,7 +69,8 @@ private:
     QString m_FrameData;
     const QCanBusFrame m_Frame;
 
-    quint8* m_write_frame;
+//    quint8* m_write_frame;
+    std::vector<quint8> m_write_frame;
 
 //    std::vector<quint8> m_can_packet;
 //    std::vector<quint8> get_packet() const {return m_can_packet;}

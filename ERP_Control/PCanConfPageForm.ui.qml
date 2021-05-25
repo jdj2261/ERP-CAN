@@ -122,19 +122,19 @@ Page {
             RadioButton {
                 id: rbuttonDrive
                 enabled: switchActive.checked
-                text: qsTr("DRIVE")
+                text: qsTr("D")
             }
 
             RadioButton {
                 id: rbuttonNeutral
                 enabled: switchActive.checked
                 checked: switchActive.checked
-                text: qsTr("NEUTRAL")
+                text: qsTr("N")
             }
             RadioButton {
                 id: rbuttonReverse
                 enabled: switchActive.checked
-                text: qsTr("REVERSE")
+                text: qsTr("R")
             }
         }
     }
