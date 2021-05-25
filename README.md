@@ -1,5 +1,5 @@
-# ERP-CAN
-[ERP42](http://www.unmansol.com/sub07_en.html#none) control panel with QT/QML 
+# ERP42-Control-GUI
+**[ERP42](http://www.unmansol.com/sub07_en.html#none) Control GUI** for **CAN communication** with **QT/QML** 
 
 >  ERP42 stands for Education Robot Platform and it is the educational platform of vehicle type that the students and researchers can easily test vehicle control, fusion of sensors and self-driving algorithm by replacing real vehicle platform as it have the similar driving, steering and break system to the real one
 
@@ -11,9 +11,11 @@
 
 - Ubuntu 18.04
 
-- QT 5.12.9
+- [QT 5.12.9](https://doc.qt.io/qt-5.12/qtquickcontrols-index.html)
 
-- PCAN-Driver for Linux 
+  ![qt_version](doc/qt_version.png)
+
+- [PCAN-Driver for Linux](https://github.com/jdj2261/ubuntu-first-install/blob/master/ubuntu-16.04/PEAK%20CAN%20USB%20%EC%84%A4%EC%B9%98.md)
 
   
 
